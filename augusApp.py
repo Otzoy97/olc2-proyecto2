@@ -3,14 +3,7 @@ import codecs
 from pathlib import Path
 from PyQt5 import QtCore, QtGui, QtWidgets
 from QCodeEditor import QCodeEditor
-from ascLexer import parse as ascParse, parser as ascParser, lexer as ascLexer
-from descLexer import parse as descParse, parser as descParser, lexer as descLexer
-from ascAST import createAST
-from descAST import createASTD
-import interpreter
-from err import createReport, lexicArgs, semanticArgs, sintacticArgs, linesCount_, createReport
-from st import t_reg, a_reg, v_reg, s_reg, sp_reg, ra_reg
-import time
+from MinorCSyntaxHighligther import MinorCSyntaxHighligther
 
 class Ui_augusApp(QtWidgets.QMainWindow):
     
@@ -82,17 +75,19 @@ class Ui_augusApp(QtWidgets.QMainWindow):
         self.splitter.setObjectName("splitter")
         # -- ENTRADA DE CODIGO
         self.txtInput = QCodeEditor(self.splitter)
-        font = QtGui.QFont()
-        font.setPointSize(10)
+        font = QtGui.QFont("Courier New",12)
         self.txtInput.setFont(font)
         self.txtInput.setObjectName("txtInput")
         self.txtInput.textChanged.connect(self.txtInputChanged_action)
         self.txtInput.cursorPositionChanged.connect(self.txtInputCursorPositionChanged_action)
+
+        self.test = MinorCSyntaxHighligther(self.txtInput.document())
+
         # -- SALIDA DE CODIGO (CMD)
         self.txtOutput =  QtWidgets.QPlainTextEdit(self.splitter)
         self.txtOutput.setMinimumSize(QtCore.QSize(0, 100))
         font = QtGui.QFont()
-        font.setPointSize(10)
+        font.setPointSize(20)
         self.txtOutput.setFont(font)
         self.txtOutput.setUndoRedoEnabled(True)
         self.txtOutput.setObjectName("txtOutput")
@@ -393,145 +388,25 @@ class Ui_augusApp(QtWidgets.QMainWindow):
                 )
 
     def ascendentRun_action(self):
-        ascLexer.lineno = 1
-        txt = self.txtInput.toPlainText()
-        lexicArgs.clear()
-        sintacticArgs.clear()
-        semanticArgs.clear()
-        # create the ast tree graph        
-        createAST(txt)
-        # create the ast tree execution
-        astRunner = ascParse(txt)
-        if(astRunner):
-            # create an instance of interpreter
-            run = interpreter.Interpreter(astRunner, self.txtOutput, self.txtInput)
-            # checks the labels
-            if (run.checkLabel()):
-                #execute de ast tree
-                run.run()
-        createReport(self.txtInput.document().blockCount())
-        ascParser.restart() 
+        pass
 
     def descendentRun_action(self):
-        descLexer.lineno = 1
-        txt = self.txtInput.toPlainText()
-        lexicArgs.clear()
-        sintacticArgs.clear()
-        semanticArgs.clear()
-        #create the ast tree grpah
-        createASTD(txt)
-        #create the ast tree execution
-        descRunner = descParse(txt)
-        if (descRunner):
-            run = interpreter.Interpreter(descRunner, self.txtOutput, self.txtInput)
-            if (run.checkLabel()):
-                run.run()
-        createReport(self.txtInput.document().blockCount())
-        descParser.restart()
+        pass
 
     def ascendentDebug_action(self):
-        '''start the execution step by step'''
-        self.saveFile_action()
-        self.lblStatus.setText("Debugging")
-        #lexer and parser called
-        ascLexer.lineno = 1
-        txt = self.txtInput.toPlainText()
-        lexicArgs.clear()
-        sintacticArgs.clear()
-        semanticArgs.clear()
-        # create the ast tree graph        
-        createAST(txt)
-        # create the ast tree execution
-        astRunner = ascParse(txt)
-        if(astRunner):
-            # create an instance of interpreter
-            self.ascDebugger = interpreter.Interpreter(astRunner, self.txtOutput, self.txtInput)
-            if (self.ascDebugger.checkLabel() and self.ascDebugger.checkMain()):  
-                #shows the symbols table
-                self.sT = SymbolsGrid(self)
-                self.sT.setAttribute(QtCore.Qt.WA_DeleteOnClose)
-                self.sT.show()         
-                #move the cursor at the begin of the text
-                self.txtInput.moveCursor(QtGui.QTextCursor.Start,QtGui.QTextCursor.MoveAnchor)
-                #block any posible edit
-                self.txtInput.setReadOnly(True)
-                self.txtInput.setTextInteractionFlags(QtCore.Qt.NoTextInteraction)
-                #restart index
-                interpreter.Interpreter.idx_debug = 0
-                #disable actions
-                self.actionNew.setEnabled(False)
-                self.actionOpen.setEnabled(False)
-                self.actionAscendent_Debugging.setEnabled(False)
-                self.actionAscendent_Without_Debugging.setEnabled(False)
-                self.actionDescendent_Without_Debugging.setEnabled(False)
-                #enable actions
-                self.actionRestart_Debugging.setEnabled(True)
-                self.actionStop_Debugging.setEnabled(True)
-                self.actionStep_Into.setEnabled(True)
-                self.actionContinue.setEnabled(True)
-                self.actionShowSymbolTable.setEnabled(True)
+        pass
 
     def restartDebug_action(self):
-        '''restart the execution step by step'''
-        #restart the debugger
-        interpreter.Interpreter.idx_debug = 0
-        self.ascDebugger.restartSymbols()
-        self.sT.updateGrid()
-        #enable edit
-        self.txtInput.setReadOnly(False)
-        self.txtInput.setTextInteractionFlags(QtCore.Qt.TextEditorInteraction)
-        #move the cursor at the begin of the text
-        self.txtInput.moveCursor(QtGui.QTextCursor.Start,QtGui.QTextCursor.MoveAnchor)
-        #block any posible edit
-        self.txtInput.setReadOnly(True)
-        self.txtInput.setTextInteractionFlags(QtCore.Qt.NoTextInteraction)
+        pass
 
     def stopDebug_action(self):
-        self.lblStatus.setText("Saved")
-        #create err reports
-        createReport(self.txtInput.document().blockCount())
-        try:
-            ascParser.restart() 
-        except:
-            pass
-        #move the cursor at the begin of the text
-        self.txtInput.moveCursor(QtGui.QTextCursor.Start,QtGui.QTextCursor.MoveAnchor)
-        #enable edit
-        self.txtInput.setReadOnly(False)
-        self.txtInput.setTextInteractionFlags(QtCore.Qt.TextEditorInteraction)
-        #enable actions
-        self.actionNew.setEnabled(True)
-        self.actionOpen.setEnabled(True)
-        self.actionAscendent_Debugging.setEnabled(True)
-        self.actionAscendent_Without_Debugging.setEnabled(True)
-        self.actionDescendent_Without_Debugging.setEnabled(True)
-        #disable actions
-        self.actionRestart_Debugging.setEnabled(False)
-        self.actionStop_Debugging.setEnabled(False)
-        self.actionStep_Into.setEnabled(False)
-        self.actionContinue.setEnabled(False)
-        self.actionShowSymbolTable.setEnabled(False)
+        pass
 
     def stepInto_action(self):
-        #enable edit
-        self.txtInput.setReadOnly(False)
-        self.txtInput.setTextInteractionFlags(QtCore.Qt.TextEditorInteraction)
-        self.ascDebugger.drun()
-        if interpreter.Interpreter.idx_debug < 0:
-            #The execution has ended or an error ocurred
-            self.stopDebug_action()
-        else:
-            #Fixs the cursor
-            self.txtInputFixCursorDebug()
-            #disable edit
-            self.txtInput.setReadOnly(True)
-            self.txtInput.setTextInteractionFlags(QtCore.Qt.NoTextInteraction)
-            #update de symbols table
-            self.sT.updateGrid()
+        pass
             
     def continue_action(self):
-        while interpreter.Interpreter.idx_debug != -1:
-            self.stepInto_action()
+        pass
 
     def showSymbolTable_action(self):
         '''show the symbol table'''
@@ -542,21 +417,6 @@ class Ui_augusApp(QtWidgets.QMainWindow):
         self.sT = SymbolsGrid(self)
         self.sT.setAttribute(QtCore.Qt.WA_DeleteOnClose)
         self.sT.show()
-
-    def txtInputFixCursorDebug(self):
-        '''this function fixes the cursor position, puts the cursor at the beggining of the 
-        first block with text'''
-        while (True):
-            txtcursor = self.txtInput.textCursor()
-            #gets the text of the block in which the cursor is
-            txtText = txtcursor.block().text().strip()
-            if txtText and txtText[0] != '#':
-                #there is something in that block and  
-                # the first character isn't a #, so it isn't a commentary
-                # leavs the loop
-                break
-            if  not self.txtInput.moveCursor(QtGui.QTextCursor.NextBlock, QtGui.QTextCursor.MoveAnchor):
-                break
 
     def txtInputCursorPositionChanged_action(self):
         txtcursor = self.txtInput.textCursor()
@@ -584,7 +444,6 @@ class Ui_augusApp(QtWidgets.QMainWindow):
             elif msg == QtWidgets.QMessageBox.Cancel:
                 event.ignore()
     
-
 class SymbolsGrid(QtWidgets.QDialog):
     def __init__(self, parent = None):
         super(SymbolsGrid, self).__init__(parent)
@@ -641,66 +500,7 @@ class SymbolsGrid(QtWidgets.QDialog):
 
     def updateGrid(self):
         '''refresh the values on the symbols table'''
-        self.tableWidget.setRowCount(0)
-        self.tableWidget.setRowCount(1)
-        for i in t_reg.syms.values():
-            rowpos = self.tableWidget.rowCount()
-            self.tableWidget.insertRow(rowpos)
-            self.tableWidget.setItem(rowpos-1, 0,QtWidgets.QTableWidgetItem( "t" + str(i.id)))
-            self.tableWidget.setItem(rowpos-1, 1,QtWidgets.QTableWidgetItem( str(i.type)))
-            self.tableWidget.setItem(rowpos-1, 2,QtWidgets.QTableWidgetItem( str(i.value)))
-            dimen = ""
-            if isinstance(i.value, dict):
-                dimen = str(len(i.value))
-            self.tableWidget.setItem(rowpos-1, 3,QtWidgets.QTableWidgetItem(dimen))
-        for i in a_reg.syms.values():
-            rowpos = self.tableWidget.rowCount()
-            self.tableWidget.insertRow(rowpos)
-            self.tableWidget.setItem(rowpos-1, 0,QtWidgets.QTableWidgetItem( "a" + str(i.id)))
-            self.tableWidget.setItem(rowpos-1, 1,QtWidgets.QTableWidgetItem( str(i.type)))
-            self.tableWidget.setItem(rowpos-1, 2,QtWidgets.QTableWidgetItem( str(i.value)))
-            dimen = ""
-            if isinstance(i.value, dict):
-                dimen = str(len(i.value))
-            self.tableWidget.setItem(rowpos-1, 3,QtWidgets.QTableWidgetItem(dimen))
-        for i in v_reg.syms.values():
-            rowpos = self.tableWidget.rowCount()
-            self.tableWidget.insertRow(rowpos)
-            self.tableWidget.setItem(rowpos-1, 0,QtWidgets.QTableWidgetItem( "v" + str(i.id)))
-            self.tableWidget.setItem(rowpos-1, 1,QtWidgets.QTableWidgetItem( str(i.type)))
-            self.tableWidget.setItem(rowpos-1, 2,QtWidgets.QTableWidgetItem( str(i.value)))
-            dimen = ""
-            if isinstance(i.value, dict):
-                dimen = str(len(i.value))
-            self.tableWidget.setItem(rowpos-1, 3,QtWidgets.QTableWidgetItem(dimen))
-        for i in s_reg.syms.values():
-            rowpos = self.tableWidget.rowCount()
-            self.tableWidget.insertRow(rowpos)
-            self.tableWidget.setItem(rowpos-1, 0,QtWidgets.QTableWidgetItem( "s" + str(i.id)))
-            self.tableWidget.setItem(rowpos-1, 1,QtWidgets.QTableWidgetItem( str(i.type)))
-            self.tableWidget.setItem(rowpos-1, 2,QtWidgets.QTableWidgetItem( str(i.value)))
-            dimen = ""
-            if isinstance(i.value, dict):
-                dimen = str(len(i.value))
-            self.tableWidget.setItem(rowpos-1, 3,QtWidgets.QTableWidgetItem(dimen))
-        dimen = ""
-        if isinstance(ra_reg.value,dict):
-            dimen = str(len(ra_reg.value))
-        rowpos = self.tableWidget.rowCount()
-        self.tableWidget.insertRow(rowpos)
-        self.tableWidget.setItem(rowpos-1, 0,QtWidgets.QTableWidgetItem( "ra"))
-        self.tableWidget.setItem(rowpos-1, 1,QtWidgets.QTableWidgetItem( str(ra_reg.type)))
-        self.tableWidget.setItem(rowpos-1, 2,QtWidgets.QTableWidgetItem( str(ra_reg.value)))
-        self.tableWidget.setItem(rowpos-1, 3,QtWidgets.QTableWidgetItem(dimen))
-        dimen = ""
-        if isinstance(sp_reg.value,dict):
-            dimen = str(len(sp_reg.value))
-        rowpos = self.tableWidget.rowCount()
-        self.tableWidget.insertRow(rowpos)
-        self.tableWidget.setItem(rowpos-1, 0,QtWidgets.QTableWidgetItem( "sp"))
-        self.tableWidget.setItem(rowpos-1, 1,QtWidgets.QTableWidgetItem( str(sp_reg.type)))
-        self.tableWidget.setItem(rowpos-1, 2,QtWidgets.QTableWidgetItem( str(sp_reg.value)))
-        self.tableWidget.setItem(rowpos-1, 3,QtWidgets.QTableWidgetItem(dimen))
+        pass
 
     def eventFilter(self, obj, event):
         if event.type() == QtCore.QEvent.KeyPress:
@@ -714,5 +514,3 @@ if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
     u = Ui_augusApp()
     sys.exit(app.exec_())
-
-

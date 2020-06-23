@@ -52,7 +52,9 @@ class MinorCSyntaxHighligther (QSyntaxHighlighter):
         'break',
         'default',
         'return',
-        'sizeof'#,
+        'sizeof',
+        'false',
+        'true'
         #'cast'
     ]
 
@@ -94,8 +96,8 @@ class MinorCSyntaxHighligther (QSyntaxHighlighter):
             (r'//[^\n]*', 0, STYLES['comment']),
 
             # Numeric literals
-            (r'\d+', 0, STYLES['numbers']),
-            (r'\d+\.\d+', 0, STYLES['numbers'])
+            (r'\d+(?:[eE](-|\+)?\d+)?', 0, STYLES['numbers']),
+            (r'\d+\.\d+(?:[eE](-|\+)?\d+)?', 0, STYLES['numbers'])
         ]
 
         # Build a QRegExp for each pattern

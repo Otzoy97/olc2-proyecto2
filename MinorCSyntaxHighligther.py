@@ -26,7 +26,7 @@ STYLES = {
     'operator': format('red'),
     'string': format('blue'),
     'comment': format('darkCyan'),
-    'numbers': format('darkMagenta'),
+    'numbers': format('darkMagenta')
 }
 
 
@@ -52,11 +52,8 @@ class MinorCSyntaxHighligther (QSyntaxHighlighter):
         'break',
         'default',
         'return',
-        'sizeof',
-        'auto',
-        'const',
-        'extern',
-        'cast'
+        'sizeof'#,
+        #'cast'
     ]
 
     # Python operators
@@ -84,17 +81,21 @@ class MinorCSyntaxHighligther (QSyntaxHighlighter):
         rules += [(r'%s' % o, 0, STYLES['operator'])
             for o in MinorCSyntaxHighligther.operators]
 
+        f = QTextCharFormat()
+        f.setForeground(QColor(180,180,0))
+
         # All other rules
         rules += [
             # Double-quoted string, possibly containing escape sequences
             (r'"[^"\\]*(\\.[^"\\]*)*"', 0, STYLES['string']),
+            (r"'((\\.)|([^'\\]))'", 0, f),
 
             # From '//' until a newline
             (r'//[^\n]*', 0, STYLES['comment']),
 
             # Numeric literals
             (r'\d+', 0, STYLES['numbers']),
-            (r'\d+\.\d+', 0, STYLES['numbers']),
+            (r'\d+\.\d+', 0, STYLES['numbers'])
         ]
 
         # Build a QRegExp for each pattern

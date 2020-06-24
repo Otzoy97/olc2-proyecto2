@@ -69,6 +69,7 @@ tokens = [
     'XORBWA',
     'ORBWA',
     'QUESR',
+    'SCOLON',
     'COLON',
     'COMMA'
 ] + list(reserved.values())
@@ -101,8 +102,8 @@ t_GR            = r'>'
 t_GRE           = r'>='
 t_LS            = r'<'
 t_LSE           = r'<='
-t_DEC           = r'\+\+'
-t_INC           = r'--'
+t_DEC           = r'--'
+t_INC           = r'\+\+'
 t_TIMESA        = r'\*='
 t_QUOTA         = r'/='
 t_REMA          = r'%='
@@ -114,8 +115,9 @@ t_ANDBWA        = r'&='
 t_XORBWA        = r'\^='
 t_ORBWA         = r'\|='
 t_QUESR         = r'\?'
-t_COLON         = r'\:'
-t_COMMA         = r'\,'
+t_SCOLON        = r';'
+t_COLON         = r':'
+t_COMMA         = r','
 
 def t_FLOATVAL(t):
     r'\d+\.\d+'
@@ -156,6 +158,7 @@ def t_CHARVAL(t):
 
 def t_ID(t):
     r'[a-zA-Z_][a-zA-Z0-9_]*'
+    print("id->", t)
     t.type = reserved.get(t.value, 'ID')
 
 def t_COMMENT(t):
@@ -173,6 +176,7 @@ def t_newline(t):
     t.lexer.lineno += len("\n")
 
 def t_error(t):
+    print("illegal char -> ", t)
     t.lexer.skip(1)
 
 lexer = lex.lex()

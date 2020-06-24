@@ -9,30 +9,6 @@ Retrieved from https://hikage.freeshell.org/books/theCprogrammingLanguage.pdf
 import ply.yacc as yacc
 from analyzer.lexer import tokens, lexer
 
-# precedence = (
-#     #('left','COMMA'),
-#     ('right','ASSIGN','TIMESA','QUOTA','REMA','PLUSA'
-#     ,'MINUSA','SHRA','SHLA','ANDBWA','XORBWA','ORBWA'),
-#     ('right','QUESR','COLON'),
-#     ('left','OR'),
-#     ('left','AND'),
-#     ('left','ORBW'),
-#     ('left','XORBW'),
-#     ('left','ANDBW'),
-#     ('left','EQ','NEQ'),
-#     ('left','LS','LSE','GR','GRE'),
-#     ('left','SHL','SHR'),
-#     ('left','PLUS','MINUS'),
-#     ('left','TIMES','QUOT','REM'),
-#     ('right','UMINUS','UPLUS','NOT', 'NOTBW', 'AMP', 'DEC', 'INC'),
-#     #('right','UMINUS','UPLUS','NOT', 'NOTBW', 'AMP', 'DEC', 'INC', 'FLOAT','CHAR','INT','DOUBLE', 'SIZEOF'),
-#     ('left','DOT','CORL','CORR','PARR','PARL')
-#     #('left','DOT','CORL','CORR','PARR','PARL')
-#     )
-
-
-
-
 def p_function_def(t):
     '''function_def     :   dec_spec declarator c_statments
     '''
@@ -54,10 +30,21 @@ def p_dec_spec(t):
     '''dec_spec         :   VOID 
                         |   INT
                         |   CHAR
-                        |   STRING
                         |   DOUBLE
                         |   FLOAT
                         |   struct_spec
+    '''
+    pass
+
+def p_struct_spec(t):
+    '''struct_spec      :   STRUCT ID LLVL struct_dec_list LLVR
+                        |   STRUCT ID
+    '''
+    pass
+
+def p_struct_dec_list(t):
+    '''struct_dec_list  :   struct_dec
+                        |   struct_dec_list struct_dec
     '''
     pass
 
@@ -73,6 +60,17 @@ def p_init_declarator(t):
     '''
     pass
 
+def p_struct_dec(t):
+    '''struct_dec       :    dec_spec struct_decr_list SCOLON
+    '''
+    pass
+
+def p_struct_decr_list(t):
+    '''struct_decr_list :   declarator
+                        |   struct_decr_list COMMA declarator
+    '''
+    pass
+
 def p_declarationLst(t):
     '''declarator       :   declaratorD'''
     pass
@@ -82,8 +80,9 @@ def p_declarator(t):
                         |   PARL declaratorD PARR
                         |   declaratorD CORL CORR
                         |   declaratorD CORL constantExpression CORR
+                        |   declaratorD PARL par_list PARR
                         |   declaratorD PARL PARR
-                        |   declaratorD PARL PARR
+                        |   declaratorD PARL constant_lst PARR
     '''
     pass
 
@@ -95,6 +94,12 @@ def p_par_list(t):
 
 def p_par_dec(t):
     '''par_dec          :   dec_spec declarator
+    '''
+    pass
+
+def p_constant_lst(t):
+    '''constant_lst     :   constantExpression
+                        |   constant_lst COMMA constantExpression
     '''
     pass
 

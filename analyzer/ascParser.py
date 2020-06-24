@@ -34,13 +34,19 @@ from analyzer.lexer import tokens, lexer
 
 
 def p_function_def(t):
-    '''function_def     :   dec_spec declarator dec_list c_statments
-                        |   dec_spec declarator c_statments
+    '''function_def     :   dec_spec declarator c_statments
     '''
     pass
 
 def p_declaration(t):
-    '''declaration      :   
+    '''declaration      :   dec_spec init_dec_list SCOLON
+                        |   dec_spec SCOLON
+    '''
+    pass
+
+def p_dec_list(t):
+    '''dec_list         :   declaration 
+                        |   dec_list declaration
     '''
     pass
 
@@ -52,6 +58,18 @@ def p_dec_spec(t):
                         |   DOUBLE
                         |   FLOAT
                         |   struct_spec
+    '''
+    pass
+
+def p_init_dec_list(t):
+    '''init_dec_list    :   init_declarator
+                        |   init_dec_list COMMA init_declarator
+    '''
+    pass
+
+def p_init_declarator(t):
+    '''init_declarator  :   declarator
+                        |   declarator ASSIGN init
     '''
     pass
 
@@ -77,6 +95,18 @@ def p_par_list(t):
 
 def p_par_dec(t):
     '''par_dec          :   dec_spec declarator
+    '''
+    pass
+
+def p_init(t):
+    '''init             :   assignmentExpression
+                        |   LLVL init_list LLVR
+    '''
+    pass
+
+def p_init_list(t):
+    '''init_list        :   init
+                        |   init_list COMMA init
     '''
     pass
 

@@ -6,6 +6,7 @@ reserved = {
     'double': 'DOUBLE',
     'float': 'FLOAT',
     'struct': 'STRUCT',
+    'void': 'VOID'
     'for': 'FOR',
     'if': 'IF',
     'else': 'ELSE',

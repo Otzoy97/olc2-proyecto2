@@ -33,8 +33,8 @@ tokens = [
     'CORR',
     'PARR',
     'PARL',
-    #'LLVR',
-    #'LLVL',
+    'LLVR',
+    'LLVL',
     'DOT',
     'MINUS',
     'PLUS',
@@ -80,8 +80,8 @@ t_CORL          = r'\['
 t_CORR          = r'\]'
 t_PARL          = r'\('
 t_PARR          = r'\)'
-#t_LLVL          = r'\{'
-#t_LLVR          = r'\}'
+t_LLVL          = r'\{'
+t_LLVR          = r'\}'
 t_MINUS         = r'-'
 t_PLUS          = r'\+'
 t_TIMES         = r'\*'

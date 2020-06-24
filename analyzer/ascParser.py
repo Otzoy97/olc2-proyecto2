@@ -82,7 +82,6 @@ def p_declarator(t):
                         |   declaratorD CORL constantExpression CORR
                         |   declaratorD PARL par_list PARR
                         |   declaratorD PARL PARR
-                        |   declaratorD PARL constant_lst PARR
     '''
     pass
 
@@ -115,11 +114,106 @@ def p_init_list(t):
     '''
     pass
 
+def p_statement(t):
+    '''statement        :   exp_statement
+                        |   compound_statement
+                        |   sel_statement
+                        |   lop_statement
+                        |   jmp_statement
+    '''
+    pass
+
+def p_switch_statement(t):
+    '''switch_statement :   CASE constantExpression COLON statement
+                        |   DEFAULT COLON statement
+    '''
+    pass
+
+def p_exp_statement(t):
+    '''exp_statement    :   expression SCOLON
+                        |   SCOLON
+    '''
+    pass
+
+def p_compound_statement(t):
+    '''compound_statement:  LLVL compound_statement1 LLVR
+    '''
+    pass
+
+def p_compound_statement1(t):
+    '''compound_statement1: dec_list
+                        |   statement_list
+                        |   empty
+    '''
+    pass
+
+def p_statement_list(t):
+    '''statement_list   :   statement
+                        |   statement_list statement
+    '''
+    pass
+
+def p_sel_statement(t):
+    '''sel_statement    :   IF PARL expression PARR statement else_statement
+                        |   SWITCH PARL expression PARR statement
+    '''
+    pass
+
+def p_else_statement(t):
+    '''else_statement   :   ELSE statement
+                        |   empty
+    '''
+    pass
+
+def p_lop_statement(t):
+    '''lop_statement    :   WHILE PARL expression PARR statement
+                        |   DO statement WHILE PARL expression PARR SCOLON
+                        |   FOR PARL expression SCOLON expression SCOLON expression PARR statement
+    '''
+    pass
+
+def p_jmp_statement(t):
+    '''jmp_statement    :   CONTINUE SCOLON
+                        |   BREAK SCOLON
+                        |   RETURN expression SCOLON
+                        |   RETURN SCOLON
+    '''
+    pass
+
+def p_expression(t):
+    '''expression       :   assignmentExpression
+                        |   expression COMMA assignmentExpression'''
+    pass 
+
+def p_assignmentExpressionList(t):
+    '''assignmentExpressionList: assignmentExpression 
+                        |   assignmentExpressionList COMMA assignmentExpression
+    '''
+    pass
+
+def p_assignmentExpression(t):
+    '''assignmentExpression:   conditionalExpression
+                        |   unaryExpression assignmentOperator assignmentExpression'''
+    pass
+
+def p_assignmentOperator(t):
+    '''assignmentOperator:   ASSIGN
+                        |   TIMESA
+                        |   QUOTA
+                        |   REMA
+                        |   PLUSA
+                        |   MINUSA
+                        |   SHRA
+                        |   SHLA
+                        |   ANDBWA
+                        |   XORBWA
+                        |   ORBWA'''
+    t[0] = t[1]
+
 def p_constantExpression(t):
     '''constantExpression:  conditionalExpression  
     '''
     pass
-
 
 def p_conditionalExpression(t):
     '''conditionalExpression: orExpression
@@ -229,36 +323,6 @@ def p_primExp(t):
                         |   FLOATVAL
                         |   CHARVAL'''
     pass
-
-def p_expression(t):
-    '''expression       :   assignmentExpression
-                        |   expression COMMA assignmentExpression'''
-    pass 
-
-def p_assignmentExpressionList(t):
-    '''assignmentExpressionList: assignmentExpression 
-                        |   assignmentExpressionList COMMA assignmentExpression
-    '''
-    pass
-
-def p_assignmentExpression(t):
-    '''assignmentExpression:   conditionalExpression
-                        |   unaryExpression assignmentOperator assignmentExpression'''
-    pass
-
-def p_assignmentOperator(t):
-    '''assignmentOperator:   ASSIGN
-                        |   TIMESA
-                        |   QUOTA
-                        |   REMA
-                        |   PLUSA
-                        |   MINUSA
-                        |   SHRA
-                        |   SHLA
-                        |   ANDBWA
-                        |   XORBWA
-                        |   ORBWA'''
-    t[0] = t[1]
 
 def p_unaryOperator(t):
     '''unaryOperator    :   ANDBW

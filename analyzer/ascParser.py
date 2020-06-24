@@ -185,12 +185,6 @@ def p_expression(t):
                         |   expression COMMA assignmentExpression'''
     pass 
 
-def p_assignmentExpressionList(t):
-    '''assignmentExpressionList: assignmentExpression 
-                        |   assignmentExpressionList COMMA assignmentExpression
-    '''
-    pass
-
 def p_assignmentExpression(t):
     '''assignmentExpression:   conditionalExpression
                         |   unaryExpression assignmentOperator assignmentExpression'''
@@ -316,6 +310,12 @@ def p_fExpression(t):
                         |   constant
                         |   STRVAL
                         |   PARL expression PARR'''
+    pass
+
+def p_assignmentExpressionList(t):
+    '''assignmentExpressionList: assignmentExpression 
+                        |   assignmentExpressionList COMMA assignmentExpression
+    '''
     pass
 
 def p_primExp(t):

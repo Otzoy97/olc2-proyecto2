@@ -18,9 +18,9 @@ reserved = {
     'break': 'BREAK',
     'default': 'DEFAULT',
     'return': 'RETURN',
-    'sizeof': 'SIZEOF',
-    'true': 'TRUE',
-    'false': 'FALSE'
+    #'true': 'TRUE',
+    #'false': 'FALSE',
+    'sizeof': 'SIZEOF'
 }
 
 tokens = [
@@ -159,7 +159,7 @@ def t_CHARVAL(t):
 
 def t_ID(t):
     r'[a-zA-Z_][a-zA-Z0-9_]*'
-    print("id->", t)
+    #print("id->", t)
     t.type = reserved.get(t.value, 'ID')
 
 def t_COMMENT(t):

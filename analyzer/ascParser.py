@@ -9,8 +9,26 @@ Retrieved from https://hikage.freeshell.org/books/theCprogrammingLanguage.pdf
 import ply.yacc as yacc
 from analyzer.lexer import tokens, lexer
 
+def p_init_minorCList(t):
+    '''inst_minorCList  :   inst_minorC
+                        |   inst_minorCList inst_minorC
+    '''
+    pass
+
+def p_empty(t):
+    '''empty            :   
+    '''
+    pass
+
+def p_init_minorC(t):
+    '''inst_minorC      :   function_def
+                        |   declaration
+    '''
+    pass
+
 def p_function_def(t):
-    '''function_def     :   dec_spec declarator c_statments
+    '''function_def     :   dec_spec declarator compound_statement
+                        |   declarator compound_statement
     '''
     pass
 
@@ -72,18 +90,29 @@ def p_struct_decr_list(t):
     pass
 
 def p_declarationLst(t):
-    '''declarator       :   declaratorD'''
+    '''declarator       :   ID declaratorD'''
     pass
 
 def p_declarator(t):
-    '''declaratorD      :   ID
-                        |   PARL declaratorD PARR
-                        |   declaratorD CORL CORR
-                        |   declaratorD CORL constantExpression CORR
-                        |   declaratorD PARL par_list PARR
-                        |   declaratorD PARL PARR
+    '''declaratorD      :   PARL PARR
+                        |   PARL par_list PARR
+                        |   dec_cor_list
+                        |   empty 
     '''
     pass
+
+def p_dec_cor_list(t):
+    '''dec_cor_list     :   dec_cor_list CORL dec_cor_list_in CORR
+                        |   CORL dec_cor_list_in CORR
+    '''
+    pass
+
+def p_dec_cor_list_in(t):
+    '''dec_cor_list_in  :   constantExpression
+                        |   empty
+    '''
+    pass
+
 
 def p_par_list(t):
     '''par_list         :   par_list COMMA par_dec
@@ -93,12 +122,6 @@ def p_par_list(t):
 
 def p_par_dec(t):
     '''par_dec          :   dec_spec declarator
-    '''
-    pass
-
-def p_constant_lst(t):
-    '''constant_lst     :   constantExpression
-                        |   constant_lst COMMA constantExpression
     '''
     pass
 
@@ -136,12 +159,12 @@ def p_exp_statement(t):
     pass
 
 def p_compound_statement(t):
-    '''compound_statement:  LLVL compound_statement1 LLVR
+    '''compound_statement :  LLVL compound_statement1 LLVR
     '''
     pass
 
 def p_compound_statement1(t):
-    '''compound_statement1: dec_list
+    '''compound_statement1 : dec_list
                         |   statement_list
                         |   empty
     '''
@@ -155,7 +178,7 @@ def p_statement_list(t):
 
 def p_sel_statement(t):
     '''sel_statement    :   IF PARL expression PARR statement else_statement
-                        |   SWITCH PARL expression PARR statement
+                        |   SWITCH PARL expression PARR switch_statement
     '''
     pass
 
@@ -186,12 +209,12 @@ def p_expression(t):
     pass 
 
 def p_assignmentExpression(t):
-    '''assignmentExpression:   conditionalExpression
+    '''assignmentExpression :   conditionalExpression
                         |   unaryExpression assignmentOperator assignmentExpression'''
     pass
 
 def p_assignmentOperator(t):
-    '''assignmentOperator:   ASSIGN
+    '''assignmentOperator :   ASSIGN
                         |   TIMESA
                         |   QUOTA
                         |   REMA
@@ -205,19 +228,19 @@ def p_assignmentOperator(t):
     t[0] = t[1]
 
 def p_constantExpression(t):
-    '''constantExpression:  conditionalExpression  
+    '''constantExpression :  conditionalExpression  
     '''
     pass
 
 def p_conditionalExpression(t):
-    '''conditionalExpression: orExpression
+    '''conditionalExpression : orExpression
                         |   orExpression QUESR expression COLON conditionalExpression
     '''
     pass
 
 def p_orExpression(t):
     '''orExpression     :   andExpression
-                        |   orExpresssion OR andExpression 
+                        |   orExpression OR andExpression 
     '''
     pass
 
@@ -283,7 +306,7 @@ def p_multiExpression(t):
 
 def p_castExpression(t):
     '''castExpression   :   unaryExpression
-                        |   PARL typeName PARR castExpression'''
+                        |   PARL dec_spec PARR castExpression'''
     pass    
     
 def p_unaryExpression(t):
@@ -292,28 +315,28 @@ def p_unaryExpression(t):
                         |   DEC unaryExpression
                         |   unaryOperator castExpression
                         |   SIZEOF unaryExpression
-                        |   SIZEOF PARL typeName PARR'''
+                        |   SIZEOF PARL dec_spec PARR'''
     pass
 
 def p_postExpression(t):
-    '''postfixExpression:   primaryExpression
-                        |   postExp CORL expression CORR
-                        |   postExp PARL PARR
-                        |   postExp PARL assignmentExpressionList PARR
-                        |   postExp DOT ID
-                        |   postExp INC
-                        |   postExp DEC'''
+    '''postfixExpression :   primaryExpression
+                        |   postfixExpression CORL expression CORR
+                        |   postfixExpression PARL PARR
+                        |   postfixExpression PARL assignmentExpressionList PARR
+                        |   postfixExpression DOT ID
+                        |   postfixExpression INC
+                        |   postfixExpression DEC'''
     pass
 
 def p_fExpression(t):
-    '''primaryExpression:   ID
+    '''primaryExpression :   ID
                         |   constant
                         |   STRVAL
                         |   PARL expression PARR'''
     pass
 
 def p_assignmentExpressionList(t):
-    '''assignmentExpressionList: assignmentExpression 
+    '''assignmentExpressionList : assignmentExpression 
                         |   assignmentExpressionList COMMA assignmentExpression
     '''
     pass
@@ -337,9 +360,17 @@ def p_error(t):
         print("error->",str(t))
         parser.errok()
 
-parser = yacc.yacc()
+import logging
+logging.basicConfig(
+    level = logging.DEBUG,
+    filename = "parselog.txt",
+    filemode = 'w',
+    format = "%(filename)10s:%(lineno)4d:%(message)s"
+)
+log = logging.getLogger()
+
+parser = yacc.yacc(debug=True,debuglog=log)
 
 def parse(input):
     lexer.lineno = 1
     return parser.parse(input)
-

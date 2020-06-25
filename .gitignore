@@ -3,3 +3,4 @@
 /analyzer/__pycache__
 /analyzer/parsetab.py
 *.out
+parselog.txt

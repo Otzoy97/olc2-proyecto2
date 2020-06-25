@@ -116,9 +116,9 @@ t_ANDBWA        = r'&='
 t_XORBWA        = r'\^='
 t_ORBWA         = r'\|='
 t_QUESR         = r'\?'
-t_SCOLON        = r';'
-t_COLON         = r':'
-t_COMMA         = r','
+t_SCOLON        = r'\;'
+t_COLON         = r'\:'
+t_COMMA         = r'\,'
 
 def t_FLOATVAL(t):
     r'\d+\.\d+'
@@ -152,15 +152,18 @@ def t_STRVAL(t):
     #str_ = str_.replace("\\r","\r")
     #str_ = str_.replace("\\t","\t")
     t.value = str_
+    return t
 
 def t_CHARVAL(t):
     r"'((\\.)|([^'\\]))'"
     t.value = t.value[1:-1]
+    return t
 
 def t_ID(t):
     r'[a-zA-Z_][a-zA-Z0-9_]*'
     #print("id->", t)
     t.type = reserved.get(t.value, 'ID')
+    return t
 
 def t_COMMENT(t):
     r'\#.*\n*?'

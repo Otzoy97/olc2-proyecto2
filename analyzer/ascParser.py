@@ -38,12 +38,6 @@ def p_declaration(t):
     '''
     pass
 
-def p_dec_list(t):
-    '''dec_list         :   declaration 
-                        |   dec_list declaration
-    '''
-    pass
-
 def p_dec_spec(t):
     '''dec_spec         :   VOID 
                         |   INT
@@ -143,6 +137,8 @@ def p_statement(t):
                         |   sel_statement
                         |   lop_statement
                         |   jmp_statement
+                        |   declaration
+                        |   switch_statement
     '''
     pass
 
@@ -159,14 +155,8 @@ def p_exp_statement(t):
     pass
 
 def p_compound_statement(t):
-    '''compound_statement :  LLVL compound_statement1 LLVR
-    '''
-    pass
-
-def p_compound_statement1(t):
-    '''compound_statement1 : dec_list
-                        |   statement_list
-                        |   empty
+    '''compound_statement :  LLVL statement_list LLVR
+                        |   LLVL LLVR
     '''
     pass
 
@@ -178,7 +168,7 @@ def p_statement_list(t):
 
 def p_sel_statement(t):
     '''sel_statement    :   IF PARL expression PARR statement else_statement
-                        |   SWITCH PARL expression PARR switch_statement
+                        |   SWITCH PARL expression PARR statement
     '''
     pass
 
@@ -191,9 +181,16 @@ def p_else_statement(t):
 def p_lop_statement(t):
     '''lop_statement    :   WHILE PARL expression PARR statement
                         |   DO statement WHILE PARL expression PARR SCOLON
-                        |   FOR PARL expression SCOLON expression SCOLON expression PARR statement
+                        |   FOR PARL for_dec_exp SCOLON expression SCOLON expression PARR statement
     '''
     pass
+
+def p_for_dec_exp(t):
+    '''for_dec_exp      :   expression
+                        |   dec_spec expression
+    '''
+    pass
+
 
 def p_jmp_statement(t):
     '''jmp_statement    :   CONTINUE SCOLON
@@ -360,16 +357,16 @@ def p_error(t):
         print("error->",str(t))
         parser.errok()
 
-import logging
-logging.basicConfig(
-    level = logging.DEBUG,
-    filename = "parselog.txt",
-    filemode = 'w',
-    format = "%(filename)10s:%(lineno)4d:%(message)s"
-)
-log = logging.getLogger()
+# import logging
+# logging.basicConfig(
+#     level = logging.DEBUG,
+#     filename = "parselog.txt",
+#     filemode = 'w',
+#     format = "%(filename)10s:%(lineno)4d:%(message)s"
+# )
+# log = logging.getLogger()
 
-parser = yacc.yacc(debug=True,debuglog=log)
+parser = yacc.yacc()
 
 def parse(input):
     lexer.lineno = 1

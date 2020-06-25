@@ -166,7 +166,7 @@ def t_ID(t):
     return t
 
 def t_COMMENT(t):
-    r'\#.*\n*?'
+    r'\/\/.*\n*?'
     t.lexer.lineno += 1
 
 def t_MCOMMENT(t):

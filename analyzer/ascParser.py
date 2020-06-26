@@ -206,8 +206,9 @@ def p_expression(t):
     pass 
 
 def p_assignmentExpression(t):
-    '''assignmentExpression :   unaryExpression
-                        |   ID assignmentOperator conditionalExpression'''
+    #TODO: is unaryExpression necesary? or it could be postfixExpression?
+    '''assignmentExpression :   conditionalExpression
+                        |   unaryExpression assignmentOperator conditionalExpression'''
     pass
 
 def p_assignmentOperator(t):

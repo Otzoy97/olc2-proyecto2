@@ -206,8 +206,8 @@ def p_expression(t):
     pass 
 
 def p_assignmentExpression(t):
-    '''assignmentExpression :   conditionalExpression
-                        |   unaryExpression assignmentOperator assignmentExpression'''
+    '''assignmentExpression :   unaryExpression
+                        |   ID assignmentOperator conditionalExpression'''
     pass
 
 def p_assignmentOperator(t):

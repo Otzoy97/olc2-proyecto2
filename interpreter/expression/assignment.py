@@ -1,4 +1,4 @@
-from interpreter.expression import Expression
+from interpreter.expression.expression import Expression
 from enum import Enum
 
 class AssignmentType(Enum):
@@ -21,5 +21,5 @@ class Assignment(Expression):
         self.expression = expression
         self.row = row
     
-    def genCode(self):
+    def genCode(self, ts):
         pass

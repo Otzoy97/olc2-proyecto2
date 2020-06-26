@@ -4,3 +4,4 @@
 /analyzer/parsetab.py
 *.out
 parselog.txt
+/analyzer/grammar.txt

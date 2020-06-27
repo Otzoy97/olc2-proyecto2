@@ -8,6 +8,7 @@ Retrieved from https://hikage.freeshell.org/books/theCprogrammingLanguage.pdf
 
 import ply.yacc as yacc
 from analyzer.lexer import tokens, lexer
+from analyzer.err import ErrType, addErr
 
 def p_init_minorCList(t):
     '''inst_minorCList  :   inst_minorC
@@ -355,8 +356,15 @@ def p_unaryOperator(t):
 
 def p_error(t):
     if t:
-        print("error->",str(t))
+        tmp = str(t.value)
+        if t.value == '>':
+            tmp = "greater-than symbol"
+        elif t.value == '<':
+            tmp = "less-than symbol"
+        addErr(ErrType.SINTACTIC, "Can't reduce '" + tmp + "'", t.lexer.lexdata[0: t.lexpos].count("\n") + 1)
         parser.errok()
+    else:
+        addErr(ErrType.SINTACTIC, "Unexpected EOF", "")
 
 # import logging
 # logging.basicConfig(

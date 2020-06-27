@@ -1,4 +1,5 @@
 import ply.lex as lex
+from analyzer.err import ErrType, addErr
 
 reserved = {
     'int': 'INT',
@@ -180,7 +181,7 @@ def t_newline(t):
     t.lexer.lineno += t.value.count("\n")
 
 def t_error(t):
-    print("illegal char -> ", t)
+    addErr(ErrType.LEXIC, 'Illegal character: ' + str(t.value[0]), t.lexer.lineno)
     t.lexer.skip(1)
 
 lexer = lex.lex()

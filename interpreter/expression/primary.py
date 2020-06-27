@@ -1,4 +1,4 @@
-from interpreter.expression.expression import Expression
+from interpreter.instruction import Instruction
 from enum import Enum
 
 class PrimaryType(Enum):
@@ -8,7 +8,7 @@ class PrimaryType(Enum):
     INTEGER = 3
     IDENTIFIER = 4
 
-class Primary(Expression):
+class Primary(Instruction):
     def __init__(self, value, type, row):
         self.value = value
         self.type = type

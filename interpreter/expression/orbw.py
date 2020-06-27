@@ -1,6 +1,6 @@
-from interpreter.expression.expression import Expression
+from interpreter.instruction import Instruction
 
-class OrBitWise(Expression):
+class OrBitWise(Instruction):
     def __init__(self, xorbw, orbw, row):
         self.xorbw = xorbw
         self.orbw = orbw

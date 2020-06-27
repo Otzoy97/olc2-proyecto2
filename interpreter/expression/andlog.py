@@ -1,6 +1,6 @@
-from interpreter.expression.expression import Expression
+from interpreter.instruction import Instruction
 
-class AndLogical(Expression):
+class AndLogical(Instruction):
     def __init__(self, orbw, andlog, row):
         self.orbw = orbw
         self.andlog = andlog

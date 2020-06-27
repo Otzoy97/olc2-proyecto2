@@ -1,6 +1,6 @@
-from interpreter.expression.expression import Expression
+from interpreter.instruction import Instruction
 
-class OrLogical(Expression):
+class OrLogical(Instruction):
     def __init__(self, andlog,  orlog, row):
         self.andlog = andlog
         self.orlog = orlog

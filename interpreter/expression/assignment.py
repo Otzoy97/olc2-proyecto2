@@ -1,4 +1,4 @@
-from interpreter.expression.expression import Expression
+from interpreter.instruction import Instruction
 from enum import Enum
 
 class AssignmentType(Enum):
@@ -14,7 +14,7 @@ class AssignmentType(Enum):
     XORBWA = 9
     ORBWA = 10
 
-class Assignment(Expression):
+class Assignment(Instruction):
     def __init__(self, identifier, assignment_type ,expression, row):
         self.identifier = identifier
         self.assignment_type = assignment_type

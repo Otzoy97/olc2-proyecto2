@@ -1,8 +1,8 @@
-from interpreter.expression.expression import Expression
+from interpreter.instruction import Instruction
 
-class Cast(Expression):
+class Cast(Instruction):
     def __init__(self, unary, cast, decSpec, row):
-        self.unary = unaryExpression
-        self.cast = castExpression
+        self.unary = unary
+        self.cast = cast
         self.decSpec = decSpec
         self.row = row

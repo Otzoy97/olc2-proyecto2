@@ -1,4 +1,4 @@
-from interpreter.expression.expression import Expression
+from interpreter.instruction import Instruction
 from enum import Enum
 
 class UnaryType(Enum):
@@ -8,7 +8,7 @@ class UnaryType(Enum):
     SIZEOFU   = 3 #unaryExpression
     SIZEOFD   = 4 #dec_spec
 
-class Unary(Expression):
+class Unary(Instruction):
     def __init__(self, postfix, unary, type, row):
         self.postfix = postfix
         self.unary   = unary

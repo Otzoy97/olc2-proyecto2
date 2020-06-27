@@ -1,4 +1,4 @@
-from interpreter.expression.expression import Expression
+from interpreter.instruction import Instruction
 from enum import Enum
 
 class PostFixType(Enum):
@@ -8,7 +8,7 @@ class PostFixType(Enum):
     INCREMENT       = 3
     DECREMENT       = 4 
 
-class Postfix(Expression):
+class Postfix(Instruction):
     def __init__(self, primary, postfix, type, row):
         self.primary = primary
         self.postfix = postfix

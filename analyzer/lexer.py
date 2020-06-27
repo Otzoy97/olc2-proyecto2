@@ -147,17 +147,10 @@ def t_INTVAL(t):
 
 def t_STRVAL(t):
     r'\"[^\"\\]*(\\.[^\"\\]*)*\"'
-    #replace \\ with \
-    str_ = t.value[1:-1]
-    #str_ = str_.replace("\\n","\n")
-    #str_ = str_.replace("\\r","\r")
-    #str_ = str_.replace("\\t","\t")
-    t.value = str_
     return t
 
 def t_CHARVAL(t):
     r"'((\\.)|([^'\\]))'"
-    t.value = t.value[1:-1]
     return t
 
 def t_ID(t):

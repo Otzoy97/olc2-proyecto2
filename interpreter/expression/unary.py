@@ -9,8 +9,7 @@ class UnaryType(Enum):
     SIZEOFD   = 4 #dec_spec
 
 class Unary(Instruction):
-    def __init__(self, postfix, unary, type, row):
-        self.postfix = postfix
-        self.unary   = unary
-        self.type    = type
-        self.row     = row
+    def __init__(self, exp, acc, row):
+        self.exp = exp
+        self.acc = acc
+        self.row = row

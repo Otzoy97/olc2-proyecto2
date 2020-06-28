@@ -1,4 +1,5 @@
 from interpreter.instruction import Instruction
+from interpreter.dspecifier import DSpecifier
 
 class Cast(Instruction):
     def __init__(self, unary, cast, decSpec, row):

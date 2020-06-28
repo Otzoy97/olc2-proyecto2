@@ -9,8 +9,15 @@ Retrieved from https://hikage.freeshell.org/books/theCprogrammingLanguage.pdf
 import ply.yacc as yacc
 from analyzer.lexer import tokens, lexer
 from analyzer.err import ErrType, addErr
+from interpreter.dspecifier import DSpecifier
+from interpreter.operator import Operator
 from interpreter.expression.primary import Primary, PrimaryType
-from interpreter.expression.postfix import Postfix, PostFixType
+from interpreter.expression.postfix import Postfix
+from interpreter.expression.unary import Unary
+from interpreter.expression.cast import Cast
+from interpreter.expression.multiplicative import Multiplicative
+from interpreter.expression.additive import Additive
+from interpreter.expression.shift import Shift
 
 def p_init_minorCList(t):
     '''inst_minorCList  :   inst_minorC
@@ -227,7 +234,7 @@ def p_assignmentOperator(t):
                         |   XORBWA
                         |   ORBWA'''
     t[0] = t[1]
-
+#FIXME: ver si el orden de estas cosas es el correcto
 def p_constantExpression(t):
     '''constantExpression :  conditionalExpression  
     '''
@@ -288,69 +295,122 @@ def p_relaExpression(t):
     pass
 
 def p_shiftExpression(t):
-    '''shiftExpression  :   addExpression
-                        |   shiftExpression SHL addExpression
-                        |   shiftExpression SHR addExpression'''
+    '''shiftExpression  :   addExpression'''
+    t[0] = Shift(t[1], [], t.lexer.lexdata[0: t.lexpos].count("\n") + 1)
+
+def p_shiftExpression(t):
+    '''shiftExpression  :   shiftExpression SHL addExpression'''
+    t[1].acc.append(tuple(Operator.SHL, t[3]))
+    t[0] = t[1]
+
+def p_shiftExpression(t):
+    '''shiftExpression  :   shiftExpression SHR addExpression'''
+    t[1].acc.append(tuple(Operator.SHR, t[3]))
+    t[0] = t[1]
 
 def p_addExpression(t):
-    '''addExpression    :   multiExpression
-                        |   addExpression PLUS multiExpression
-                        |   addExpression MINUS multiExpression'''
-    pass
+    '''addExpression    :   multiExpression'''
+    t[0] = Additive(t[1], [], t.lexer.lexdata[0: t.lexpos].count("\n") + 1)
+
+def p_addExpression(t):
+    '''addExpression    :   addExpression PLUS multiExpression'''
+    t[1].acc.append(tuple(Operator.PLUS, t[3]))
+    t[0] = t[1]
+
+def p_addExpression(t):
+    '''addExpression    :   addExpression MINUS multiExpression'''
+    t[1].acc.append(tuple(Operator.MINUS, t[3]))
+    t[0] = t[1]
 
 def p_multiExpression(t):
-    '''multiExpression  :   castExpression
-                        |   multiExpression TIMES castExpression
-                        |   multiExpression QUOT castExpression
-                        |   multiExpression REM castExpression'''
-    pass
+    '''multiExpression  :   castExpression'''
+    t[0] = Multiplicative(t[1], [], t.lexer.lexdata[0: t.lexpos].count("\n") + 1)
 
-def p_castExpression(t):
-    '''castExpression   :   unaryExpression
-                        |   PARL dec_spec PARR castExpression'''
-    pass    
+def p_multiExpression(t):
+    '''multiExpression  :   multiExpression TIMES castExpression'''
+    t[1].acc.append(tuple(Operator.TIMES, t[3]))
+    t[0] = t[1]
+
+def p_multiExpression(t):
+    '''multiExpression  :   multiExpression QUOT castExpression'''
+    t[1].acc.append(tuple(Operator.QUOTIENT, t[3]))
+    t[0] = t[1]
+
+def p_multiExpression(t):
+    '''multiExpression  :   multiExpression REM castExpression'''
+    t[1].acc.append(tuple(Operator.REMAINDER, t[3]))
+    t[0] = t[1]
+
+def p_castExpression0(t):
+    '''castExpression   :   unaryExpression'''
+    t[0] = Cast(t[1], [], t.lexer.lexdata[0: t.lexpos].count("\n") + 1)
+
+def p_castExpression1(t):
+    '''castExpression   :   PARL dec_spec PARR castExpression'''
+    t[4].acc.append(tuple(t[2], None))
+    t[0] = t[4]
     
-def p_unaryExpression(t):
-    '''unaryExpression  :   postfixExpression
-                        |   INC unaryExpression
-                        |   DEC unaryExpression
-                        |   unaryOperator castExpression
-                        |   SIZEOF unaryExpression
-                        |   SIZEOF PARL dec_spec PARR'''
+def p_unaryExpression0(t):
+    '''unaryExpression  :   postfixExpression'''
+    t[0] = Unary(t[1], [], t.lexer.lexdata[0: t.lexpos].count("\n") + 1)
     
+def p_unaryExpression1(t):
+    '''unaryExpression  :   INC unaryExpression'''
+    t[2].acc.append(tuple(Operator.INCREMENT, None))
+    t[0] = t2
+
+def p_unaryExpression2(t):
+    '''unaryExpression  :   DEC unaryExpression'''
+    t[2].acc.append(tuple(Operator.DECREMENT, None))
+    t[0] = t[2]
+
+def p_unaryExpression3(t):
+    '''unaryExpression  :   unaryOperator castExpression'''
+    t[2].acc.append(tuple(t[1], None))
+    t[0] = t[2]
+    
+def p_unaryExpression4(t):
+    '''unaryExpression  :   SIZEOF unaryExpression'''
+    t[2].acc.append(tuple(Operator.SIZEOF, None))
+    t[0] = t[2]
+
+def p_unaryExpression5(t):
+    '''unaryExpression  :   SIZEOF PARL dec_spec PARR'''
+    t[2].acc.append(tuple(Operator.SIZEOF, None))
+    t[0] = t[2]
 
 def p_postExpression0(t):
     '''postfixExpression :  primaryExpression'''
-    t[0] = [tuple(t[1], None, t.lexer.lexdata[0: t.lexpos].count("\n") + 1)]
+    t[0] = Postfix(t[1], [], t.lexer.lexdata[0: t.lexpos].count("\n") + 1)
 
 def p_postExpression1(t):
     '''postfixExpression :  postfixExpression CORL expression CORR'''
-    t[1].append(tuple(t[3], PostFixType.ARRAYACCESS, ""))
+    t[1].acc.append(tuple(Operator.ARRAYACCESS, t[3]))
     t[0] = t[1]
     
 def p_postExpression2(t):
     '''postfixExpression :  postfixExpression PARL PARR'''
-    t[1].append(tuple(None, PostFixType.CALL, ""))
+    t[1].acc.append(tuple(Operator.CALL, None))
     t[0] = t[1]
 
 def p_postExpression3(t):
     '''postfixExpression :  postfixExpression PARL assignmentExpressionList PARR'''
-    t[1].append(tuple(t[3], PostFixType.CALL, ""))
+    t[1].acc.append(tuple(Operator.CALL, t[3]))
     t[0] = t[1]
 
 def p_postExpression4(t):
     '''postfixExpression :  postfixExpression DOT ID'''
-    t[1].append(tuple(t[3], PostFixType.STRUCTACCESSS, ""))
+    t[1].acc.append(tuple(Operator.STRUCTACCESSS, t[3]))
     t[0] = t[1]
 
 def p_postExpression5(t):
     '''postfixExpression :  postfixExpression INC'''
-    t[1].append(tuple(None, PostFixType.INCREMENT, ""))
+    t[1].acc.append(tuple(Operator.INCREMENT))
     t[0] = t[1]
 
 def p_postExpression6(t):
     '''postfixExpression :  postfixExpression DEC'''
-    t[1].append(tuple(None, PostFixType.DECREMENT, ""))
+    t[1].acc.append(tuple(Operator.DECREMENT)
     t[0] = t[1]
 
 def p_fExpression0(t):
@@ -393,7 +453,16 @@ def p_unaryOperator(t):
                         |   MINUS
                         |   NOTBW
                         |   NOT'''
-    t[0] = t[1]
+    if (t[1]] == '&'):
+        t[0] == Operator.AMPERSAND
+    elif (t[1]] == '+'):
+        t[0] == Operator.UPLUS
+    elif (t[1]] == '-'):
+        t[0] == Operator.UMINUS
+    elif (t[1]] == '~'):
+        t[0] == Operator.NOTBW
+    elif (t[1]] == '!'):
+        t[0] == Operator.NOT
 
 def p_error(t):
     if t:

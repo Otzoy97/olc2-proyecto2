@@ -9,8 +9,10 @@ class PostFixType(Enum):
     DECREMENT       = 4 
 
 class Postfix(Instruction):
-    def __init__(self, primary, postfix, type, row):
-        self.primary = primary
-        self.postfix = postfix
+    def __init__(self, exp, type, row):
+        self.exp = exp
         self.type = type
         self.row = row
+
+    def firstRun(self):
+        pass

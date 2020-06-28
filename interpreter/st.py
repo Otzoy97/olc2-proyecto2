@@ -4,8 +4,11 @@ from copy import copy, deepcopy
 class SymbolType(Enum):
     FUNCTION = 0
     VARIABLE = 1
+    STRUCT = 2
+    ARRAY = 3
 
 class Symbol():
+    # TODO: añadir una forma de determinar de determinar la dimensión de los array
     def __init__(self, temp, value, type, environment, row):
         #temp is a $t + idx
         #value is the value stored
@@ -17,6 +20,8 @@ class Symbol():
         self.type = type
         self.environment = environment
         self.row = row
+        self.dimension = 0
+        self.struct = []
 
 class SymbolTable():
     #Keep track of the index for temporal variables

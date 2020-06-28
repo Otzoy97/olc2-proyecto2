@@ -9,6 +9,7 @@ Retrieved from https://hikage.freeshell.org/books/theCprogrammingLanguage.pdf
 import ply.yacc as yacc
 from analyzer.lexer import tokens, lexer
 from analyzer.err import ErrType, addErr
+from interpreter.expression.primary import Primary, PrimaryType
 
 def p_init_minorCList(t):
     '''inst_minorCList  :   inst_minorC
@@ -327,24 +328,37 @@ def p_postExpression(t):
                         |   postfixExpression DEC'''
     pass
 
-def p_fExpression(t):
-    '''primaryExpression :   ID
-                        |   constant
-                        |   STRVAL
-                        |   PARL expression PARR'''
-    pass
+def p_fExpression0(t):
+    '''primaryExpression :  constant'''
+    t[0] = t[1]
 
-def p_assignmentExpressionList(t):
-    '''assignmentExpressionList : assignmentExpression 
-                        |   assignmentExpressionList COMMA assignmentExpression
-    '''
-    pass
+def p_fExpression1(t):
+    '''primaryExpression :  PARL expression PARR'''
+    t[0] = t[2]
 
-def p_primExp(t):
+def p_fExpression2(t):
+    '''primaryExpression :   ID'''
+    t[0] = Primary(t[1], PrimaryType.IDENTIFIER, t.lexer.lexdata[0: t.lexpos].count("\n") + 1)
+
+def p_fExpression3(t):
+    '''primaryExpression :   STRVAL'''
+    t[0] = Primary(t[1], PrimaryType.CONSTANT, t.lexer.lexdata[0: t.lexpos].count("\n") + 1)
+
+
+def p_assignmentExpressionList0(t):
+    '''assignmentExpressionList : assignmentExpression'''
+    t[0] = [t[1]]
+
+def p_assignmentExpressionList1(t):
+    '''assignmentExpressionList :  assignmentExpressionList COMMA assignmentExpression'''
+    t[1].append(t[3])
+    t[0] = t[1]
+
+def p_primExp0(t):
     '''constant         :   INTVAL
                         |   FLOATVAL
                         |   CHARVAL'''
-    pass
+    t[0] = Primary(t[1], PrimaryType.CONSTANT, t.lexer.lexdata[0: t.lexpos].count("\n") + 1)
 
 def p_unaryOperator(t):
     '''unaryOperator    :   ANDBW
@@ -365,15 +379,6 @@ def p_error(t):
         parser.errok()
     else:
         addErr(ErrType.SINTACTIC, "Unexpected EOF", "")
-
-# import logging
-# logging.basicConfig(
-#     level = logging.DEBUG,
-#     filename = "parselog.txt",
-#     filemode = 'w',
-#     format = "%(filename)10s:%(lineno)4d:%(message)s"
-# )
-# log = logging.getLogger()
 
 parser = yacc.yacc()
 

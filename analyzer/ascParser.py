@@ -18,6 +18,14 @@ from interpreter.expression.cast import Cast
 from interpreter.expression.multiplicative import Multiplicative
 from interpreter.expression.additive import Additive
 from interpreter.expression.shift import Shift
+from interpreter.expression.relational import Relational
+from interpreter.expression.equality import Equality
+from interpreter.expression.andbw import AndBitWise
+from interpreter.expression.orbw import OrBitWise
+from interpreter.expression.xorbw import XorBitWise
+from interpreter.expression.andlog import AndLogical
+from interpreter.expression.orlog import OrLogical
+from interpreter.expression.conditional import Conditional
 
 def p_init_minorCList(t):
     '''inst_minorCList  :   inst_minorC
@@ -233,66 +241,124 @@ def p_assignmentOperator(t):
                         |   ANDBWA
                         |   XORBWA
                         |   ORBWA'''
-    t[0] = t[1]
+    if t[1] == '=':
+        t[0] = Operator.ASSIGN
+    elif t[1] == '*=':
+        t[0] = Operator.TIMESA
+    elif t[1] == '/=':
+        t[0] = Operator.QUOTA
+    elif t[1] == '%=':
+        t[0] = Operator.REMA
+    elif t[1] == '+=':
+        t[0] = Operator.PLUSA
+    elif t[1] == '-=':
+        t[0] = Operator.MINUSA
+    elif t[1] == '>>=':
+        t[0] = Operator.SHRA
+    elif t[1] == '<<=':
+        t[0] = Operator.SHLA
+    elif t[1] == '&=':
+        t[0] = Operator.ANDBWA
+    elif t[1] == '^=':
+        t[0] = Operator.XORBWA
+    elif t[1] == '|=':
+        t[0] = Operator.ORBWA
+
 #FIXME: ver si el orden de estas cosas es el correcto
 def p_constantExpression(t):
-    '''constantExpression :  conditionalExpression  
-    '''
-    pass
+    '''constantExpression :  conditionalExpression '''
+    t[0] = t[1]
 
 def p_conditionalExpression(t):
-    '''conditionalExpression : orExpression
-                        |   orExpression QUESR expression COLON conditionalExpression
-    '''
-    pass
+    '''conditionalExpression : orExpression'''
+    t[0] = Conditional(t[1], None, None, t.lexer.lexdata[0: t.lexpos].count("\n") + 1)
+
+def p_conditionalExpression(t):
+    '''conditionalExpression : orExpression QUESR expression COLON conditionalExpression'''
+    t[0] = Conditional(t[1], t[3], t[5], t.lexer.lexdata[0: t.lexpos].count("\n") + 1)
 
 def p_orExpression(t):
-    '''orExpression     :   andExpression
-                        |   orExpression OR andExpression 
-    '''
-    pass
+    '''orExpression     :   andExpression'''
+    t[0] = OrLogical(t[1], [], t.lexer.lexdata[0: t.lexpos].count("\n") + 1)
 
+def p_orExpression(t):
+    '''orExpression     :   orExpression OR andExpression'''
+    t[1].acc.append(tuple(Operator.OR, t[3]))
+    t[0] = t[1]
 
 def p_andExpression(t):
-    '''andExpression    :   orBwExpression
-                        |   andExpression AND orBwExpression
-    '''
-    pass
+    '''andExpression    :   orBwExpression'''
+    t[0] = AndLogical(t[1], [], t.lexer.lexdata[0: t.lexpos].count("\n") + 1)
+
+def p_andExpression(t):
+    '''andExpression    :   andExpression AND orBwExpression'''
+    t[1].acc.append(tuple(Operator.AND, t[3]))
+    t[0] = t[1]
 
 def p_orBwExpression(t):
-    '''orBwExpression   :   xorBwExpression
-                        |   orBwExpression ORBW xorBwExpression
-    '''
-    pass
+    '''orBwExpression   :   xorBwExpression'''
+    t[0] = OrBitWise(t[1], [], t.lexer.lexdata[0: t.lexpos].count("\n") + 1)
+
+def p_orBwExpression(t):
+    '''orBwExpression   :   orBwExpression ORBW xorBwExpression'''
+    t[1].acc.append(tuple(Operator.ORBW, t[3]))
+    t[0] = t[1]
 
 def p_xorBwExpression(t):
-    '''xorBwExpression  :   andBwExpression
-                        |   xorBwExpression XORBW andBwExpression
-    '''
-    pass
+    '''xorBwExpression  :   andBwExpression'''
+    t[0] = XorBitWise(t[1], [], t.lexer.lexdata[0: t.lexpos].count("\n") + 1)
+
+def p_xorBwExpression(t):
+    '''xorBwExpression  :   xorBwExpression XORBW andBwExpression'''
+    t[1].acc.append(tuple(Operator.XORBW, t[3]))
+    t[0] = t[1]
 
 def p_andBwExpression(t):
-    '''andBwExpression  :   equalExpression
-                        |   andBwExpression ANDBW  equalExpression
-    '''
-    pass
+    '''andBwExpression  :   equalExpression'''
+    t[0] = AndBitWise(t[1], [], t.lexer.lexdata[0: t.lexpos].count("\n") + 1)
 
+def p_andBwExpression(t):
+    '''andBwExpression  :   andBwExpression ANDBW equalExpression'''
+    t[1].acc.append(tuple(Operator.ANDBW, t[3]))
+    t[0] = t[1]
 
 def p_equalExpression(t):
-    '''equalExpression  :   relaExpression
-                        |   equalExpression EQ relaExpression
-                        |   equalExpression NEQ relaExpression
-    '''
-    pass
+    '''equalExpression  :   relaExpression'''
+    t[0] = Equality(t[1], [], t.lexer.lexdata[0: t.lexpos].count("\n") + 1)
+
+def p_equalExpression(t):
+    '''equalExpression  :   equalExpression EQ relaExpression'''
+    t[1].acc.append(tuple(Operator.EQ, t[3]))
+    t[0] = t[1]
+    
+def p_equalExpression(t):
+    '''equalExpression  :   equalExpression NEQ relaExpression'''
+    t[1].acc.append(tuple(Operator.NEQ, t[3]))
+    t[0] = t[1]
 
 def p_relaExpression(t):
-    '''relaExpression   :   shiftExpression
-                        |   relaExpression LS shiftExpression
-                        |   relaExpression GR shiftExpression
-                        |   relaExpression LSE shiftExpression
-                        |   relaExpression GRE shiftExpression
-    '''
-    pass
+    '''relaExpression   :   shiftExpression'''
+    t[0] = Relational(t[1], [], t.lexer.lexdata[0: t.lexpos].count("\n") + 1)
+
+def p_relaExpression(t):
+    '''relaExpression   :   relaExpression LS shiftExpression'''
+    t[1].acc.append(tuple(Operator.LS, t[3]))
+    t[0] = t[1]
+
+def p_relaExpression(t):
+    '''relaExpression   :   relaExpression GR shiftExpression'''
+    t[1].acc.append(tuple(Operator.GR, t[3]))
+    t[0] = t[1]
+
+def p_relaExpression(t):
+    '''relaExpression   :   relaExpression LSE shiftExpression'''
+    t[1].acc.append(tuple(Operator.LSE, t[3]))
+    t[0] = t[1]
+
+def p_relaExpression(t):
+    '''relaExpression   :   relaExpression GRE shiftExpression'''
+    t[1].acc.append(tuple(Operator.GRE, t[3]))
+    t[0] = t[1]
 
 def p_shiftExpression(t):
     '''shiftExpression  :   addExpression'''

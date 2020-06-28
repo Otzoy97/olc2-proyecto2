@@ -27,6 +27,8 @@ from interpreter.expression.andlog import AndLogical
 from interpreter.expression.orlog import OrLogical
 from interpreter.expression.conditional import Conditional
 from interpreter.expression.assignment import Assignment
+from interpreter.expression.jump import Jump
+from interpreter.expression.struct import Struct
 
 def p_init_minorCList(t):
     '''inst_minorCList  :   inst_minorC
@@ -55,7 +57,7 @@ def p_declaration(t):
     '''declaration      :   dec_spec init_dec_list SCOLON
                         |   dec_spec SCOLON
     '''
-    pass
+    t[0] = 
 
 def p_dec_spec(t):
     '''dec_spec         :   VOID 
@@ -63,80 +65,111 @@ def p_dec_spec(t):
                         |   CHAR
                         |   DOUBLE
                         |   FLOAT
-                        |   struct_spec
-    '''
-    pass
+                        |   struct_spec'''
+    if str(t[1]) == "void":
+        t[0] = DSpecifier.VOID
+    elif str(t[1]) == "int":
+        t[0] = DSpecifier.INTEGER
+    elif str(t[1]) == "char":
+        t[0] = DSpecifier.CHARACTER
+    elif str(t[1]) == "double":
+        t[0] = DSpecifier.FLOATING
+    elif str(t[1]) == "float":
+        t[0] = DSpecifier.FLOATING
+    else:
+        t[0] = t[1]
 
-def p_struct_spec(t):
-    '''struct_spec      :   STRUCT ID LLVL struct_dec_list LLVR
-                        |   STRUCT ID
-    '''
-    pass
+def p_struct_spec0(t):
+    '''struct_spec      :   STRUCT ID LLVL struct_dec_list LLVR'''
+    t[0] = Struct(t[2], t[4])
 
-def p_struct_dec_list(t):
-    '''struct_dec_list  :   struct_dec
-                        |   struct_dec_list struct_dec
-    '''
-    pass
+def p_struct_spec1(t):
+    '''struct_spec      :   STRUCT ID'''
+    t[0] = Struct(t[2], None)
+
+def p_struct_dec_list0(t):
+    '''struct_dec_list  :   struct_dec'''
+    t[0] = [t[1]]
+
+def p_struct_dec_list1(t):
+    '''struct_dec_list  :   struct_dec_list struct_dec'''
+    t[1].append(t[2])
+    t[0] = t[1]
 
 def p_init_dec_list(t):
-    '''init_dec_list    :   init_declarator
-                        |   init_dec_list COMMA init_declarator
-    '''
-    pass
+    '''init_dec_list    :   init_declarator'''
+    t[0] = [t[1]]
+    
+def p_init_dec_list(t):
+    '''init_dec_list    :   init_dec_list COMMA init_declarator'''
+    t[1].append(t[3])
+    t[0] = t[1]
 
 def p_init_declarator(t):
-    '''init_declarator  :   declarator
-                        |   declarator ASSIGN init
-    '''
-    pass
+    '''init_declarator  :   declarator'''
+    t[0] = tuple(t[1], None)
+
+def p_init_declarator(t):
+    '''init_declarator  :   declarator ASSIGN init'''
+    t[0] = tuple(t[1], t[3])
 
 def p_struct_dec(t):
-    '''struct_dec       :    dec_spec struct_decr_list SCOLON
-    '''
-    pass
+    '''struct_dec       :    dec_spec struct_decr_list SCOLON'''
+    dicstruct = []
+    for i in t[2]:
+        dicstruct[i[0]] = i[1]
+    t[0] =  tuple(t[1],t[2])
 
-def p_struct_decr_list(t):
-    '''struct_decr_list :   declarator
-                        |   struct_decr_list COMMA declarator
-    '''
-    pass
+def p_struct_decr_list0(t):
+    '''struct_decr_list :   declarator'''
+    t[0] = [t[1]]
+
+def p_struct_decr_list1(t):
+    '''struct_decr_list :   struct_decr_list COMMA declarator'''
+    t[1].append(t[3])
+    t[0] = t[1]
 
 def p_declarationLst(t):
     '''declarator       :   ID declaratorD'''
-    pass
+    t[0] = tuple(t[1], t[2])
 
 def p_declarator(t):
-    '''declaratorD      :   PARL PARR
-                        |   PARL par_list PARR
-                        |   dec_cor_list
-                        |   empty 
-    '''
-    pass
+    '''declaratorD      :   PARL PARR'''
+    t[0] = []
 
-def p_dec_cor_list(t):
-    '''dec_cor_list     :   dec_cor_list CORL dec_cor_list_in CORR
-                        |   CORL dec_cor_list_in CORR
-    '''
-    pass
+def p_declarator(t):
+    '''declaratorD      :   PARL par_list PARR'''
+    t[0] = t[2]
 
-def p_dec_cor_list_in(t):
-    '''dec_cor_list_in  :   constantExpression
-                        |   empty
-    '''
-    pass
+def p_declarator(t):
+    '''declaratorD      :   dec_cor_list'''
+    t[0] = t[1]
 
+def p_declarator(t):
+    '''declaratorD      :   empty '''
+    t[0] = None
 
-def p_par_list(t):
-    '''par_list         :   par_list COMMA par_dec
-                        |   par_dec
-    '''
-    pass
+def p_dec_cor_list0(t):
+    '''dec_cor_list     :   dec_cor_list CORL constantExpression CORR'''
+    t[1].append(t[3])
+    t[0] = t[1]
+
+def p_dec_cor_list1(t):
+    '''dec_cor_list     :   CORL constantExpression CORR'''
+    t[0] = [t[2]]
+
+def p_par_list0(t):
+    '''par_list         :   par_list COMMA par_dec'''
+    t[1].append(t[3])
+    t[0] = t[1]
+
+def p_par_list1(t):
+    '''par_list         :   par_dec'''
+    t[0] = [t[1]]
 
 def p_par_dec(t):
-    '''par_dec          :   dec_spec declarator
-    '''
-    pass
+    '''par_dec          :   dec_spec declarator'''
+    t[0] = tuple(t[0], t[1])
 
 def p_init(t):
     '''init             :   assignmentExpression
@@ -483,7 +516,7 @@ def p_postExpression5(t):
 
 def p_postExpression6(t):
     '''postfixExpression :  postfixExpression DEC'''
-    t[1].acc.append(tuple(Operator.DECREMENT)
+    t[1].acc.append(tuple(Operator.DECREMENT))
     t[0] = t[1]
 
 def p_fExpression0(t):

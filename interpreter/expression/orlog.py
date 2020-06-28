@@ -1,7 +1,7 @@
 from interpreter.instruction import Instruction
 
 class OrLogical(Instruction):
-    def __init__(self, andlog,  orlog, row):
-        self.andlog = andlog
-        self.orlog = orlog
+    def __init__(self, exp, acc, row):
+        self.exp = exp
+        self.acc = acc
         self.row = row

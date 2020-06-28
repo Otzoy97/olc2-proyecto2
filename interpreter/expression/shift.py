@@ -1,8 +1,7 @@
 from interpreter.instruction import Instruction
 
 class Shift(Instruction):
-    def __init__(self, add, shift, type, row):
-        self.add = add
-        self.shift = shift
-        self.type = type
+    def __init__(self, exp, acc, row):
+        self.exp = exp
+        self.acc = acc
         self.row =row

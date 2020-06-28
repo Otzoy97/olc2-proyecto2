@@ -1,8 +1,7 @@
 from interpreter.instruction import Instruction
 
 class Multiplicative(Instruction):
-    def __init__(self, cast, acc, row):
-        self.cast = cast
-        self.multi = multi
-        self.type = type
+    def __init__(self, exp, acc, row):
+        self.exp = exp
+        self.acc = acc
         self.row = row

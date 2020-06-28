@@ -10,6 +10,7 @@ import ply.yacc as yacc
 from analyzer.lexer import tokens, lexer
 from analyzer.err import ErrType, addErr
 from interpreter.expression.primary import Primary, PrimaryType
+from interpreter.expression.postfix import Postfix, PostFixType
 
 def p_init_minorCList(t):
     '''inst_minorCList  :   inst_minorC
@@ -316,24 +317,50 @@ def p_unaryExpression(t):
                         |   unaryOperator castExpression
                         |   SIZEOF unaryExpression
                         |   SIZEOF PARL dec_spec PARR'''
-    pass
+    
 
-def p_postExpression(t):
-    '''postfixExpression :   primaryExpression
-                        |   postfixExpression CORL expression CORR
-                        |   postfixExpression PARL PARR
-                        |   postfixExpression PARL assignmentExpressionList PARR
-                        |   postfixExpression DOT ID
-                        |   postfixExpression INC
-                        |   postfixExpression DEC'''
-    pass
+def p_postExpression0(t):
+    '''postfixExpression :  primaryExpression'''
+    t[0] = [tuple(t[1], None, t.lexer.lexdata[0: t.lexpos].count("\n") + 1)]
+
+def p_postExpression1(t):
+    '''postfixExpression :  postfixExpression CORL expression CORR'''
+    t[1].append(tuple(t[3], PostFixType.ARRAYACCESS, ""))
+    t[0] = t[1]
+    
+def p_postExpression2(t):
+    '''postfixExpression :  postfixExpression PARL PARR'''
+    t[1].append(tuple(None, PostFixType.CALL, ""))
+    t[0] = t[1]
+
+def p_postExpression3(t):
+    '''postfixExpression :  postfixExpression PARL assignmentExpressionList PARR'''
+    t[1].append(tuple(t[3], PostFixType.CALL, ""))
+    t[0] = t[1]
+
+def p_postExpression4(t):
+    '''postfixExpression :  postfixExpression DOT ID'''
+    t[1].append(tuple(t[3], PostFixType.STRUCTACCESSS, ""))
+    t[0] = t[1]
+
+def p_postExpression5(t):
+    '''postfixExpression :  postfixExpression INC'''
+    t[1].append(tuple(None, PostFixType.INCREMENT, ""))
+    t[0] = t[1]
+
+def p_postExpression6(t):
+    '''postfixExpression :  postfixExpression DEC'''
+    t[1].append(tuple(None, PostFixType.DECREMENT, ""))
+    t[0] = t[1]
 
 def p_fExpression0(t):
     '''primaryExpression :  constant'''
+    #rise value
     t[0] = t[1]
 
 def p_fExpression1(t):
     '''primaryExpression :  PARL expression PARR'''
+    #rise value
     t[0] = t[2]
 
 def p_fExpression2(t):

@@ -26,6 +26,7 @@ from interpreter.expression.xorbw import XorBitWise
 from interpreter.expression.andlog import AndLogical
 from interpreter.expression.orlog import OrLogical
 from interpreter.expression.conditional import Conditional
+from interpreter.expression.assignment import Assignment
 
 def p_init_minorCList(t):
     '''inst_minorCList  :   inst_minorC
@@ -219,15 +220,21 @@ def p_jmp_statement(t):
     pass
 
 def p_expression(t):
-    '''expression       :   assignmentExpression
-                        |   expression COMMA assignmentExpression'''
-    pass 
+    '''expression       :   assignmentExpression'''
+    t[0] = [t[1]]
+
+def p_expression(t):
+    '''expression       :   expression COMMA assignmentExpression'''
+    t[1].append(t[3])
+    t[0] = t[1]
 
 def p_assignmentExpression(t):
-    #TODO: is unaryExpression necesary? or it could be postfixExpression?
-    '''assignmentExpression :   conditionalExpression
-                        |   unaryExpression assignmentOperator conditionalExpression'''
-    pass
+    '''assignmentExpression :   conditionalExpression'''
+    t[0] = Assignment(t[1], None, None, t.lexer.lexdata[0: t.lexpos].count("\n") + 1)
+
+def p_assignmentExpression(t):
+    '''assignmentExpression : unaryExpression assignmentOperator conditionalExpression'''
+    t[0] = Assignment(t[1], t[2], t[3], t.lexer.lexdata[0: t.lexpos].count("\n") + 1)
 
 def p_assignmentOperator(t):
     '''assignmentOperator :   ASSIGN

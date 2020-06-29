@@ -5,6 +5,8 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 from QCodeEditor import QCodeEditor
 from MinorCSyntaxHighligther import MinorCSyntaxHighligther
 
+from analyzer.ascParser import parse as ascParse, parser as ascParser
+
 class Ui_augusApp(QtWidgets.QMainWindow):
     
     def __init__(self, parent = None):
@@ -388,7 +390,11 @@ class Ui_augusApp(QtWidgets.QMainWindow):
                 )
 
     def ascendentRun_action(self):
-        pass
+        txt = self.txtInput.toPlainText()
+        t = ascParse(txt)
+        print(str(t))
+        ascParser.restart()
+        
 
     def descendentRun_action(self):
         pass

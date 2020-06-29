@@ -5,3 +5,5 @@
 *.out
 parselog.txt
 /analyzer/grammar.txt
+/interpreter/__pycache__
+/interpreter/expression/__pycache__

@@ -5,3 +5,6 @@ class XorBitWise(Instruction):
         self.exp = exp
         self.acc = acc
         self.row = row
+
+    def firstRun(self):
+        pass

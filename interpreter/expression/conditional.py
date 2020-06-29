@@ -6,3 +6,6 @@ class Conditional(Instruction):
         self.exp2 = exp2
         self.exp3 = exp3
         self.row = row
+
+    def firstRun(self):
+        pass

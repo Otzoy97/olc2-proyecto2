@@ -7,5 +7,5 @@ class Assignment(Instruction):
         self.exp2 = exp2
         self.row = row
     
-    def genCode(self, ts):
+    def firstRun(self):
         pass

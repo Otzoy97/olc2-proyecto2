@@ -5,3 +5,6 @@ class AndLogical(Instruction):
         self.exp = exp
         self.acc = acc
         self.acc = row
+
+    def firstRun(self):
+        pass

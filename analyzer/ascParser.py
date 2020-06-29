@@ -50,7 +50,7 @@ def p_init_minorC0(t):
 
 def p_init_minorC1(t):
     '''inst_minorC      :   declaration'''
-    t[0] = Declaration(t[1], t.lexer.lexdata[0: t.lexpos].count("\n") + 1)
+    t[0] = Declaration(t[1], t.lexer.lexdata[0: t.lexer.lexpos].count("\n") + 1))
 
 def p_function_def(t):
     '''function_def     :   dec_spec declarator compound_statement
@@ -125,7 +125,7 @@ def p_struct_dec(t):
     '''struct_dec       :    dec_spec struct_decr_list SCOLON'''
     dicstruct = []
     for i in t[2]:
-        dicstruct.append(tuple(t[1], i))
+        dicstruct.append((t[1], i))
     t[0] =  dicstruct
 
 def p_struct_decr_list0(t):
@@ -139,7 +139,7 @@ def p_struct_decr_list1(t):
 
 def p_declarationLst(t):
     '''declarator       :   ID declaratorD'''
-    t[0] = tuple(t[1], t[2])
+    t[0] = (t[1], t[2])
 
 def p_declarator0(t):
     '''declaratorD      :   PARL PARR'''
@@ -177,7 +177,7 @@ def p_par_list1(t):
 
 def p_par_dec(t):
     '''par_dec          :   dec_spec declarator'''
-    t[0] = tuple(t[0], t[1])
+    t[0] = (t[0], t[1])
 
 def p_init0(t):
     '''init             :   assignmentExpression'''
@@ -281,11 +281,11 @@ def p_expression1(t):
 
 def p_assignmentExpression0(t):
     '''assignmentExpression :   conditionalExpression'''
-    t[0] = Assignment(None, None, t[1], t.lexer.lexdata[0: t.lexpos].count("\n") + 1)
+    t[0] = Assignment(None, None, t[1], t.lexer.lexdata[0: t.lexer.lexpos].count("\n") + 1))
 
 def p_assignmentExpression1(t):
     '''assignmentExpression : unaryExpression assignmentOperator conditionalExpression'''
-    t[0] = Assignment(t[1], t[2], t[3], t.lexer.lexdata[0: t.lexpos].count("\n") + 1)
+    t[0] = Assignment(t[1], t[2], t[3], t.lexer.lexdata[0: t.lexer.lexpos].count("\n") + 1))
 
 def p_assignmentOperator(t):
     '''assignmentOperator :   ASSIGN
@@ -329,212 +329,212 @@ def p_constantExpression(t):
 
 def p_conditionalExpression0(t):
     '''conditionalExpression : orExpression'''
-    t[0] = Conditional(t[1], None, None, t.lexer.lexdata[0: t.lexpos].count("\n") + 1)
+    t[0] = Conditional(t[1], None, None, t.lexer.lexdata[0: t.lexer.lexpos].count("\n") + 1))
 
 def p_conditionalExpression1(t):
     '''conditionalExpression : orExpression QUESR expression COLON conditionalExpression'''
-    t[0] = Conditional(t[1], t[3], t[5], t.lexer.lexdata[0: t.lexpos].count("\n") + 1)
+    t[0] = Conditional(t[1], t[3], t[5], t.lexer.lexdata[0: t.lexer.lexpos].count("\n") + 1))
 
 def p_orExpression0(t):
     '''orExpression     :   andExpression'''
-    t[0] = OrLogical(t[1], [], t.lexer.lexdata[0: t.lexpos].count("\n") + 1)
+    t[0] = OrLogical(t[1], [], t.lexer.lexdata[0: t.lexer.lexpos].count("\n") + 1))
 
 def p_orExpression1(t):
     '''orExpression     :   orExpression OR andExpression'''
-    t[1].acc.append(tuple(Operator.OR, t[3]))
+    t[1].acc.append((Operator.OR, t[3]))
     t[0] = t[1]
 
 def p_andExpression0(t):
     '''andExpression    :   orBwExpression'''
-    t[0] = AndLogical(t[1], [], t.lexer.lexdata[0: t.lexpos].count("\n") + 1)
+    t[0] = AndLogical(t[1], [], t.lexer.lexdata[0: t.lexer.lexpos].count("\n") + 1))
 
 def p_andExpression1(t):
     '''andExpression    :   andExpression AND orBwExpression'''
-    t[1].acc.append(tuple(Operator.AND, t[3]))
+    t[1].acc.append((Operator.AND, t[3]))
     t[0] = t[1]
 
 def p_orBwExpression0(t):
     '''orBwExpression   :   xorBwExpression'''
-    t[0] = OrBitWise(t[1], [], t.lexer.lexdata[0: t.lexpos].count("\n") + 1)
+    t[0] = OrBitWise(t[1], [], t.lexer.lexdata[0: t.lexer.lexpos].count("\n") + 1))
 
 def p_orBwExpression1(t):
     '''orBwExpression   :   orBwExpression ORBW xorBwExpression'''
-    t[1].acc.append(tuple(Operator.ORBW, t[3]))
+    t[1].acc.append((Operator.ORBW, t[3]))
     t[0] = t[1]
 
 def p_xorBwExpression0(t):
     '''xorBwExpression  :   andBwExpression'''
-    t[0] = XorBitWise(t[1], [], t.lexer.lexdata[0: t.lexpos].count("\n") + 1)
+    t[0] = XorBitWise(t[1], [], t.lexer.lexdata[0: t.lexer.lexpos].count("\n") + 1))
 
 def p_xorBwExpression1(t):
     '''xorBwExpression  :   xorBwExpression XORBW andBwExpression'''
-    t[1].acc.append(tuple(Operator.XORBW, t[3]))
+    t[1].acc.append((Operator.XORBW, t[3]))
     t[0] = t[1]
 
 def p_andBwExpression0(t):
     '''andBwExpression  :   equalExpression'''
-    t[0] = AndBitWise(t[1], [], t.lexer.lexdata[0: t.lexpos].count("\n") + 1)
+    t[0] = AndBitWise(t[1], [], t.lexer.lexdata[0: t.lexer.lexpos].count("\n") + 1))
 
 def p_andBwExpression1(t):
     '''andBwExpression  :   andBwExpression ANDBW equalExpression'''
-    t[1].acc.append(tuple(Operator.ANDBW, t[3]))
+    t[1].acc.append((Operator.ANDBW, t[3]))
     t[0] = t[1]
 
 def p_equalExpression0(t):
     '''equalExpression  :   relaExpression'''
-    t[0] = Equality(t[1], [], t.lexer.lexdata[0: t.lexpos].count("\n") + 1)
+    t[0] = Equality(t[1], [], t.lexer.lexdata[0: t.lexer.lexpos].count("\n") + 1))
 
 def p_equalExpression1(t):
     '''equalExpression  :   equalExpression EQ relaExpression'''
-    t[1].acc.append(tuple(Operator.EQ, t[3]))
+    t[1].acc.append((Operator.EQ, t[3]))
     t[0] = t[1]
     
 def p_equalExpression2(t):
     '''equalExpression  :   equalExpression NEQ relaExpression'''
-    t[1].acc.append(tuple(Operator.NEQ, t[3]))
+    t[1].acc.append((Operator.NEQ, t[3]))
     t[0] = t[1]
 
 def p_relaExpression0(t):
     '''relaExpression   :   shiftExpression'''
-    t[0] = Relational(t[1], [], t.lexer.lexdata[0: t.lexpos].count("\n") + 1)
+    t[0] = Relational(t[1], [], t.lexer.lexdata[0: t.lexer.lexpos].count("\n") + 1))
 
 def p_relaExpression1(t):
     '''relaExpression   :   relaExpression LS shiftExpression'''
-    t[1].acc.append(tuple(Operator.LS, t[3]))
+    t[1].acc.append((Operator.LS, t[3]))
     t[0] = t[1]
 
 def p_relaExpression2(t):
     '''relaExpression   :   relaExpression GR shiftExpression'''
-    t[1].acc.append(tuple(Operator.GR, t[3]))
+    t[1].acc.append((Operator.GR, t[3]))
     t[0] = t[1]
 
 def p_relaExpression3(t):
     '''relaExpression   :   relaExpression LSE shiftExpression'''
-    t[1].acc.append(tuple(Operator.LSE, t[3]))
+    t[1].acc.append((Operator.LSE, t[3]))
     t[0] = t[1]
 
 def p_relaExpression4(t):
     '''relaExpression   :   relaExpression GRE shiftExpression'''
-    t[1].acc.append(tuple(Operator.GRE, t[3]))
+    t[1].acc.append((Operator.GRE, t[3]))
     t[0] = t[1]
 
 def p_shiftExpression0(t):
     '''shiftExpression  :   addExpression'''
-    t[0] = Shift(t[1], [], t.lexer.lexdata[0: t.lexpos].count("\n") + 1)
+    t[0] = Shift(t[1], [], t.lexer.lexdata[0: t.lexer.lexpos].count("\n") + 1))
 
 def p_shiftExpression1(t):
     '''shiftExpression  :   shiftExpression SHL addExpression'''
-    t[1].acc.append(tuple(Operator.SHL, t[3]))
+    t[1].acc.append((Operator.SHL, t[3]))
     t[0] = t[1]
 
 def p_shiftExpression2(t):
     '''shiftExpression  :   shiftExpression SHR addExpression'''
-    t[1].acc.append(tuple(Operator.SHR, t[3]))
+    t[1].acc.append((Operator.SHR, t[3]))
     t[0] = t[1]
 
 def p_addExpression0(t):
     '''addExpression    :   multiExpression'''
-    t[0] = Additive(t[1], [], t.lexer.lexdata[0: t.lexpos].count("\n") + 1)
+    t[0] = Additive(t[1], [], t.lexer.lexdata[0: t.lexer.lexpos].count("\n") + 1))
 
 def p_addExpression1(t):
     '''addExpression    :   addExpression PLUS multiExpression'''
-    t[1].acc.append(tuple(Operator.PLUS, t[3]))
+    t[1].acc.append((Operator.PLUS, t[3]))
     t[0] = t[1]
 
 def p_addExpression2(t):
     '''addExpression    :   addExpression MINUS multiExpression'''
-    t[1].acc.append(tuple(Operator.MINUS, t[3]))
+    t[1].acc.append((Operator.MINUS, t[3]))
     t[0] = t[1]
 
 def p_multiExpression0(t):
     '''multiExpression  :   castExpression'''
-    t[0] = Multiplicative(t[1], [], t.lexer.lexdata[0: t.lexpos].count("\n") + 1)
+    t[0] = Multiplicative(t[1], [], t.lexer.lexdata[0: t.lexer.lexpos].count("\n") + 1))
 
 def p_multiExpression1(t):
     '''multiExpression  :   multiExpression TIMES castExpression'''
-    t[1].acc.append(tuple(Operator.TIMES, t[3]))
+    t[1].acc.append((Operator.TIMES, t[3]))
     t[0] = t[1]
 
 def p_multiExpression2(t):
     '''multiExpression  :   multiExpression QUOT castExpression'''
-    t[1].acc.append(tuple(Operator.QUOTIENT, t[3]))
+    t[1].acc.append((Operator.QUOTIENT, t[3]))
     t[0] = t[1]
 
 def p_multiExpression3(t):
     '''multiExpression  :   multiExpression REM castExpression'''
-    t[1].acc.append(tuple(Operator.REMAINDER, t[3]))
+    t[1].acc.append((Operator.REMAINDER, t[3]))
     t[0] = t[1]
 
 def p_castExpression0(t):
     '''castExpression   :   unaryExpression'''
-    t[0] = Cast(t[1], [], t.lexer.lexdata[0: t.lexpos].count("\n") + 1)
+    t[0] = Cast(t[1], [], t.lexer.lexdata[0: t.lexer.lexpos].count("\n") + 1))
 
 def p_castExpression1(t):
     '''castExpression   :   PARL dec_spec PARR castExpression'''
-    t[4].acc.append(tuple(t[2], None))
+    t[4].acc.append((t[2], None))
     t[0] = t[4]
     
 def p_unaryExpression0(t):
     '''unaryExpression  :   postfixExpression'''
-    t[0] = Unary(t[1], [], t.lexer.lexdata[0: t.lexpos].count("\n") + 1)
+    t[0] = Unary(t[1], [], t.lexer.lexdata[0: t.lexer.lexpos].count("\n") + 1))
     
 def p_unaryExpression1(t):
     '''unaryExpression  :   INC unaryExpression'''
-    t[2].acc.append(tuple(Operator.INCREMENT, None))
+    t[2].acc.append((Operator.INCREMENT, None))
     t[0] = t[2]
 
 def p_unaryExpression2(t):
     '''unaryExpression  :   DEC unaryExpression'''
-    t[2].acc.append(tuple(Operator.DECREMENT, None))
+    t[2].acc.append((Operator.DECREMENT, None))
     t[0] = t[2]
 
 def p_unaryExpression3(t):
     '''unaryExpression  :   unaryOperator castExpression'''
-    t[2].acc.append(tuple(t[1], None))
+    t[2].acc.append((t[1], None))
     t[0] = t[2]
     
 def p_unaryExpression4(t):
     '''unaryExpression  :   SIZEOF unaryExpression'''
-    t[2].acc.append(tuple(Operator.SIZEOF, None))
+    t[2].acc.append((Operator.SIZEOF, None))
     t[0] = t[2]
 
 def p_unaryExpression5(t):
     '''unaryExpression  :   SIZEOF PARL dec_spec PARR'''
-    t[2].acc.append(tuple(Operator.SIZEOF, None))
+    t[2].acc.append((Operator.SIZEOF, None))
     t[0] = t[2]
 
 def p_postExpression0(t):
     '''postfixExpression :  primaryExpression'''
-    t[0] = Postfix(t[1], [], t.lexer.lexdata[0: t.lexpos].count("\n") + 1)
+    t[0] = Postfix(t[1], [], t.lexer.lexdata[0: t.lexer.lexpos].count("\n") + 1))
 
 def p_postExpression1(t):
     '''postfixExpression :  postfixExpression CORL expression CORR'''
-    t[1].acc.append(tuple(Operator.ARRAYACCESS, t[3]))
+    t[1].acc.append((Operator.ARRAYACCESS, t[3]))
     t[0] = t[1]
     
 def p_postExpression2(t):
     '''postfixExpression :  postfixExpression PARL PARR'''
-    t[1].acc.append(tuple(Operator.CALL, None))
+    t[1].acc.append((Operator.CALL, None))
     t[0] = t[1]
 
 def p_postExpression3(t):
     '''postfixExpression :  postfixExpression PARL assignmentExpressionList PARR'''
-    t[1].acc.append(tuple(Operator.CALL, t[3]))
+    t[1].acc.append((Operator.CALL, t[3]))
     t[0] = t[1]
 
 def p_postExpression4(t):
     '''postfixExpression :  postfixExpression DOT ID'''
-    t[1].acc.append(tuple(Operator.STRUCTACCESS, t[3]))
+    t[1].acc.append((Operator.STRUCTACCESS, t[3]))
     t[0] = t[1]
 
 def p_postExpression5(t):
     '''postfixExpression :  postfixExpression INC'''
-    t[1].acc.append(tuple(Operator.INCREMENT))
+    t[1].acc.append((Operator.INCREMENT))
     t[0] = t[1]
 
 def p_postExpression6(t):
     '''postfixExpression :  postfixExpression DEC'''
-    t[1].acc.append(tuple(Operator.DECREMENT))
+    t[1].acc.append((Operator.DECREMENT))
     t[0] = t[1]
 
 def p_fExpression0(t):
@@ -549,11 +549,11 @@ def p_fExpression1(t):
 
 def p_fExpression2(t):
     '''primaryExpression :   ID'''
-    t[0] = Primary(t[1], PrimaryType.IDENTIFIER, t.lexer.lexdata[0: t.lexpos].count("\n") + 1)
+    t[0] = Primary(t[1], PrimaryType.IDENTIFIER, t.lexer.lexdata[0: t.lexer.lexpos].count("\n") + 1))
 
 def p_fExpression3(t):
     '''primaryExpression :   STRVAL'''
-    t[0] = Primary(t[1], PrimaryType.CONSTANT, t.lexer.lexdata[0: t.lexpos].count("\n") + 1)
+    t[0] = Primary(t[1], PrimaryType.CONSTANT, t.lexer.lexdata[0: t.lexer.lexpos].count("\n") + 1))
 
 
 def p_assignmentExpressionList0(t):
@@ -569,7 +569,7 @@ def p_primExp0(t):
     '''constant         :   INTVAL
                         |   FLOATVAL
                         |   CHARVAL'''
-    t[0] = Primary(t[1], PrimaryType.CONSTANT, t.lexer.lexdata[0: t.lexpos].count("\n") + 1)
+    t[0] = Primary(t[1], PrimaryType.CONSTANT, t.lexer.lexdata[0: t.lexer.lexpos].count("\n") + 1))
 
 def p_unaryOperator(t):
     '''unaryOperator    :   ANDBW
@@ -595,7 +595,7 @@ def p_error(t):
             tmp = "greater-than symbol"
         elif t.value == '<':
             tmp = "less-than symbol"
-        addErr(ErrType.SINTACTIC, "Can't reduce '" + tmp + "'", t.lexer.lexdata[0: t.lexpos].count("\n") + 1)
+        addErr(ErrType.SINTACTIC, "Can't reduce '" + tmp + "'", t.lexer.lexdata[0: t.lexer.lexpos].count("\n") + 1))
         parser.errok()
     else:
         addErr(ErrType.SINTACTIC, "Unexpected EOF", "")

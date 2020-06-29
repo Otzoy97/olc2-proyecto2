@@ -50,7 +50,7 @@ def p_init_minorC0(t):
 
 def p_init_minorC1(t):
     '''inst_minorC      :   declaration'''
-    t[0] = Declaration(t[1], t.lexer.lexdata[0: t.lexer.lexpos].count("\n") + 1))
+    t[0] = Declaration(t[1], t.lexer.lexdata[0: t.lexer.lexpos].count("\n") + 1)
 
 def p_function_def(t):
     '''function_def     :   dec_spec declarator compound_statement
@@ -281,11 +281,11 @@ def p_expression1(t):
 
 def p_assignmentExpression0(t):
     '''assignmentExpression :   conditionalExpression'''
-    t[0] = Assignment(None, None, t[1], t.lexer.lexdata[0: t.lexer.lexpos].count("\n") + 1))
+    t[0] = Assignment(None, None, t[1], t.lexer.lexdata[0: t.lexer.lexpos].count("\n") + 1)
 
 def p_assignmentExpression1(t):
     '''assignmentExpression : unaryExpression assignmentOperator conditionalExpression'''
-    t[0] = Assignment(t[1], t[2], t[3], t.lexer.lexdata[0: t.lexer.lexpos].count("\n") + 1))
+    t[0] = Assignment(t[1], t[2], t[3], t.lexer.lexdata[0: t.lexer.lexpos].count("\n") + 1)
 
 def p_assignmentOperator(t):
     '''assignmentOperator :   ASSIGN
@@ -329,15 +329,15 @@ def p_constantExpression(t):
 
 def p_conditionalExpression0(t):
     '''conditionalExpression : orExpression'''
-    t[0] = Conditional(t[1], None, None, t.lexer.lexdata[0: t.lexer.lexpos].count("\n") + 1))
+    t[0] = Conditional(t[1], None, None, t.lexer.lexdata[0: t.lexer.lexpos].count("\n") + 1)
 
 def p_conditionalExpression1(t):
     '''conditionalExpression : orExpression QUESR expression COLON conditionalExpression'''
-    t[0] = Conditional(t[1], t[3], t[5], t.lexer.lexdata[0: t.lexer.lexpos].count("\n") + 1))
+    t[0] = Conditional(t[1], t[3], t[5], t.lexer.lexdata[0: t.lexer.lexpos].count("\n") + 1)
 
 def p_orExpression0(t):
     '''orExpression     :   andExpression'''
-    t[0] = OrLogical(t[1], [], t.lexer.lexdata[0: t.lexer.lexpos].count("\n") + 1))
+    t[0] = OrLogical(t[1], [], t.lexer.lexdata[0: t.lexer.lexpos].count("\n") + 1)
 
 def p_orExpression1(t):
     '''orExpression     :   orExpression OR andExpression'''
@@ -346,7 +346,7 @@ def p_orExpression1(t):
 
 def p_andExpression0(t):
     '''andExpression    :   orBwExpression'''
-    t[0] = AndLogical(t[1], [], t.lexer.lexdata[0: t.lexer.lexpos].count("\n") + 1))
+    t[0] = AndLogical(t[1], [], t.lexer.lexdata[0: t.lexer.lexpos].count("\n") + 1)
 
 def p_andExpression1(t):
     '''andExpression    :   andExpression AND orBwExpression'''
@@ -355,7 +355,7 @@ def p_andExpression1(t):
 
 def p_orBwExpression0(t):
     '''orBwExpression   :   xorBwExpression'''
-    t[0] = OrBitWise(t[1], [], t.lexer.lexdata[0: t.lexer.lexpos].count("\n") + 1))
+    t[0] = OrBitWise(t[1], [], t.lexer.lexdata[0: t.lexer.lexpos].count("\n") + 1)
 
 def p_orBwExpression1(t):
     '''orBwExpression   :   orBwExpression ORBW xorBwExpression'''
@@ -364,7 +364,7 @@ def p_orBwExpression1(t):
 
 def p_xorBwExpression0(t):
     '''xorBwExpression  :   andBwExpression'''
-    t[0] = XorBitWise(t[1], [], t.lexer.lexdata[0: t.lexer.lexpos].count("\n") + 1))
+    t[0] = XorBitWise(t[1], [], t.lexer.lexdata[0: t.lexer.lexpos].count("\n") + 1)
 
 def p_xorBwExpression1(t):
     '''xorBwExpression  :   xorBwExpression XORBW andBwExpression'''
@@ -373,7 +373,7 @@ def p_xorBwExpression1(t):
 
 def p_andBwExpression0(t):
     '''andBwExpression  :   equalExpression'''
-    t[0] = AndBitWise(t[1], [], t.lexer.lexdata[0: t.lexer.lexpos].count("\n") + 1))
+    t[0] = AndBitWise(t[1], [], t.lexer.lexdata[0: t.lexer.lexpos].count("\n") + 1)
 
 def p_andBwExpression1(t):
     '''andBwExpression  :   andBwExpression ANDBW equalExpression'''
@@ -382,7 +382,7 @@ def p_andBwExpression1(t):
 
 def p_equalExpression0(t):
     '''equalExpression  :   relaExpression'''
-    t[0] = Equality(t[1], [], t.lexer.lexdata[0: t.lexer.lexpos].count("\n") + 1))
+    t[0] = Equality(t[1], [], t.lexer.lexdata[0: t.lexer.lexpos].count("\n") + 1)
 
 def p_equalExpression1(t):
     '''equalExpression  :   equalExpression EQ relaExpression'''
@@ -396,7 +396,7 @@ def p_equalExpression2(t):
 
 def p_relaExpression0(t):
     '''relaExpression   :   shiftExpression'''
-    t[0] = Relational(t[1], [], t.lexer.lexdata[0: t.lexer.lexpos].count("\n") + 1))
+    t[0] = Relational(t[1], [], t.lexer.lexdata[0: t.lexer.lexpos].count("\n") + 1)
 
 def p_relaExpression1(t):
     '''relaExpression   :   relaExpression LS shiftExpression'''
@@ -420,7 +420,7 @@ def p_relaExpression4(t):
 
 def p_shiftExpression0(t):
     '''shiftExpression  :   addExpression'''
-    t[0] = Shift(t[1], [], t.lexer.lexdata[0: t.lexer.lexpos].count("\n") + 1))
+    t[0] = Shift(t[1], [], t.lexer.lexdata[0: t.lexer.lexpos].count("\n") + 1)
 
 def p_shiftExpression1(t):
     '''shiftExpression  :   shiftExpression SHL addExpression'''
@@ -434,7 +434,7 @@ def p_shiftExpression2(t):
 
 def p_addExpression0(t):
     '''addExpression    :   multiExpression'''
-    t[0] = Additive(t[1], [], t.lexer.lexdata[0: t.lexer.lexpos].count("\n") + 1))
+    t[0] = Additive(t[1], [], t.lexer.lexdata[0: t.lexer.lexpos].count("\n") + 1)
 
 def p_addExpression1(t):
     '''addExpression    :   addExpression PLUS multiExpression'''
@@ -448,7 +448,7 @@ def p_addExpression2(t):
 
 def p_multiExpression0(t):
     '''multiExpression  :   castExpression'''
-    t[0] = Multiplicative(t[1], [], t.lexer.lexdata[0: t.lexer.lexpos].count("\n") + 1))
+    t[0] = Multiplicative(t[1], [], t.lexer.lexdata[0: t.lexer.lexpos].count("\n") + 1)
 
 def p_multiExpression1(t):
     '''multiExpression  :   multiExpression TIMES castExpression'''
@@ -467,7 +467,7 @@ def p_multiExpression3(t):
 
 def p_castExpression0(t):
     '''castExpression   :   unaryExpression'''
-    t[0] = Cast(t[1], [], t.lexer.lexdata[0: t.lexer.lexpos].count("\n") + 1))
+    t[0] = Cast(t[1], [], t.lexer.lexdata[0: t.lexer.lexpos].count("\n") + 1)
 
 def p_castExpression1(t):
     '''castExpression   :   PARL dec_spec PARR castExpression'''
@@ -476,7 +476,7 @@ def p_castExpression1(t):
     
 def p_unaryExpression0(t):
     '''unaryExpression  :   postfixExpression'''
-    t[0] = Unary(t[1], [], t.lexer.lexdata[0: t.lexer.lexpos].count("\n") + 1))
+    t[0] = Unary(t[1], [], t.lexer.lexdata[0: t.lexer.lexpos].count("\n") + 1)
     
 def p_unaryExpression1(t):
     '''unaryExpression  :   INC unaryExpression'''
@@ -505,7 +505,7 @@ def p_unaryExpression5(t):
 
 def p_postExpression0(t):
     '''postfixExpression :  primaryExpression'''
-    t[0] = Postfix(t[1], [], t.lexer.lexdata[0: t.lexer.lexpos].count("\n") + 1))
+    t[0] = Postfix(t[1], [], t.lexer.lexdata[0: t.lexer.lexpos].count("\n") + 1)
 
 def p_postExpression1(t):
     '''postfixExpression :  postfixExpression CORL expression CORR'''
@@ -549,11 +549,11 @@ def p_fExpression1(t):
 
 def p_fExpression2(t):
     '''primaryExpression :   ID'''
-    t[0] = Primary(t[1], PrimaryType.IDENTIFIER, t.lexer.lexdata[0: t.lexer.lexpos].count("\n") + 1))
+    t[0] = Primary(t[1], PrimaryType.IDENTIFIER, t.lexer.lexdata[0: t.lexer.lexpos].count("\n") + 1)
 
 def p_fExpression3(t):
     '''primaryExpression :   STRVAL'''
-    t[0] = Primary(t[1], PrimaryType.CONSTANT, t.lexer.lexdata[0: t.lexer.lexpos].count("\n") + 1))
+    t[0] = Primary(t[1], PrimaryType.CONSTANT, t.lexer.lexdata[0: t.lexer.lexpos].count("\n") + 1)
 
 
 def p_assignmentExpressionList0(t):
@@ -569,7 +569,7 @@ def p_primExp0(t):
     '''constant         :   INTVAL
                         |   FLOATVAL
                         |   CHARVAL'''
-    t[0] = Primary(t[1], PrimaryType.CONSTANT, t.lexer.lexdata[0: t.lexer.lexpos].count("\n") + 1))
+    t[0] = Primary(t[1], PrimaryType.CONSTANT, t.lexer.lexdata[0: t.lexer.lexpos].count("\n") + 1)
 
 def p_unaryOperator(t):
     '''unaryOperator    :   ANDBW
@@ -595,7 +595,7 @@ def p_error(t):
             tmp = "greater-than symbol"
         elif t.value == '<':
             tmp = "less-than symbol"
-        addErr(ErrType.SINTACTIC, "Can't reduce '" + tmp + "'", t.lexer.lexdata[0: t.lexer.lexpos].count("\n") + 1))
+        addErr(ErrType.SINTACTIC, "Can't reduce '" + tmp + "'", t.lexer.lexdata[0: t.lexer.lexpos].count("\n") + 1)
         parser.errok()
     else:
         addErr(ErrType.SINTACTIC, "Unexpected EOF", "")

@@ -6,6 +6,7 @@ from QCodeEditor import QCodeEditor
 from MinorCSyntaxHighligther import MinorCSyntaxHighligther
 
 from analyzer.ascParser import parse as ascParse, parser as ascParser
+from analyzer.err import createReport
 
 class Ui_augusApp(QtWidgets.QMainWindow):
     
@@ -392,7 +393,10 @@ class Ui_augusApp(QtWidgets.QMainWindow):
     def ascendentRun_action(self):
         txt = self.txtInput.toPlainText()
         t = ascParse(txt)
-        print(str(t))
+        print(t)
+        #for i in t:
+        #    print(i)
+        createReport()
         ascParser.restart()
         
 

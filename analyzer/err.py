@@ -28,6 +28,8 @@ def createReport():
     '''this function create the three error reports'''
     addContentToDot(Digraph(name="Lexic_errors",node_attr={'shape':'plaintext', 'color':'green'}),lexicArgs,"Lexical errors")
     addContentToDot(Digraph(name="Sintactic_errors",node_attr={'shape':'plaintext','color':'blue'}),sintacticArgs,"Sintactic errors")
+    lexicArgs.clear()
+    sintacticArgs.clear()
 
 def addContentToDot(dotObj,content,reportName):
     '''add nodes to the graphviz object dotObj'''

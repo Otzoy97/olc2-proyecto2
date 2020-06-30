@@ -101,7 +101,8 @@ def p_struct_dec_list0(t):
 
 def p_struct_dec_list1(t):
     '''struct_dec_list  :   struct_dec_list struct_dec'''
-    t[1].append(t[2])
+    for i in t[2]:
+        t[1].append(i)
     t[0] = t[1]
 
 def p_init_dec_list0(t):
@@ -115,18 +116,17 @@ def p_init_dec_list1(t):
 
 def p_init_declarator0(t):
     '''init_declarator  :   declarator'''
-    t[0] = [t[1], None]
+    t[0] = t[1]
 
 def p_init_declarator1(t):
     '''init_declarator  :   declarator ASSIGN init'''
-    t[0] = [t[1], t[3]]
+    t[0] = t[1].append[t[3]]
 
 def p_struct_dec(t):
     '''struct_dec       :    dec_spec struct_decr_list SCOLON'''
-    dicstruct = []
     for i in t[2]:
-        dicstruct.append((t[1], i))
-    t[0] =  dicstruct
+        i.insert(0,t[1])
+    t[0] =  t[2]
 
 def p_struct_decr_list0(t):
     '''struct_decr_list :   declarator'''
@@ -139,7 +139,7 @@ def p_struct_decr_list1(t):
 
 def p_declarationLst(t):
     '''declarator       :   ID declaratorD'''
-    t[0] = (t[1], t[2])
+    t[0] = [t[1], t[2]]
 
 def p_declarator0(t):
     '''declaratorD      :   PARL PARR'''

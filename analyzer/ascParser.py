@@ -120,7 +120,8 @@ def p_init_declarator0(t):
 
 def p_init_declarator1(t):
     '''init_declarator  :   declarator ASSIGN init'''
-    t[0] = t[1].append[t[3]]
+    t[0] = t[1].append(t[3])
+    print(t[3])
 
 def p_struct_dec(t):
     '''struct_dec       :    dec_spec struct_decr_list SCOLON'''
@@ -189,14 +190,15 @@ def p_init1(t):
 
 def p_init_list0(t):
     '''init_list        :   init'''
-    if isinstance(t[1],list):
-        t[0] = t[1]
-    elif isinstance(t[1], Assignment):
-        t[0] = [t[1]]
+    t[0] = [t[1]]
 
 def p_init_list1(t):
     '''init_list        :   init_list COMMA init'''
-    t[1].append(t[3])
+    if isinstance(t[3], list):
+        for i in t[3]:
+            t[1].append(i)
+    else:
+        t[1].append(t[3])
     t[0] = t[1]
 
 def p_statement(t):

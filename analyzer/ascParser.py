@@ -120,8 +120,8 @@ def p_init_declarator0(t):
 
 def p_init_declarator1(t):
     '''init_declarator  :   declarator ASSIGN init'''
-    t[0] = t[1].append(t[3])
-    print(t[3])
+    t[1].append(t[3])
+    t[0] = t[1]
 
 def p_struct_dec(t):
     '''struct_dec       :    dec_spec struct_decr_list SCOLON'''
@@ -215,6 +215,7 @@ def p_statement(t):
 def p_switch_statement(t):
     '''switch_statement :   CASE constantExpression COLON statement
                         |   DEFAULT COLON statement
+                        |   ID COLON statement
     '''
     pass
 
@@ -269,6 +270,7 @@ def p_jmp_statement(t):
                         |   BREAK SCOLON
                         |   RETURN expression SCOLON
                         |   RETURN SCOLON
+                        |   GOTO ID SCOLON
     '''
     pass
 
@@ -516,7 +518,7 @@ def p_postExpression1(t):
     
 def p_postExpression2(t):
     '''postfixExpression :  postfixExpression PARL PARR'''
-    t[1].acc.append((Operator.CALL, None))
+    t[1].acc.append((Operator.CALL, []))
     t[0] = t[1]
 
 def p_postExpression3(t):

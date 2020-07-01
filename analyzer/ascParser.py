@@ -364,41 +364,42 @@ def p_binaryExpression0(t):
                             |   binaryExpressions QUOT binaryExpressions
                             |   binaryExpressions REM binaryExpressions'''
     if t[2] == "||":
-        t[0] = Binary(t[1], Operator.OR, t[2])
+        t[0] = Binary(t[1], Operator.OR, t[3])
     elif t[2] == "&&":
-        t[0] = Binary(t[1], Operator.AND, t[2])
+        t[0] = Binary(t[1], Operator.AND, t[3])
     elif t[2] == "|":
-        t[0] = Binary(t[1], Operator.ORBW, t[2])
+        t[0] = Binary(t[1], Operator.ORBW, t[3])
     elif t[2] == "^":
-        t[0] = Binary(t[1], Operator.XORBW, t[2])
+        t[0] = Binary(t[1], Operator.XORBW, t[3])
     elif t[2] == "&":
-        t[0] = Binary(t[1], Operator.ANDBW, t[2])
+        t[0] = Binary(t[1], Operator.ANDBW, t[3])
     elif t[2] == "==":
-        t[0] = Binary(t[1], Operator.EQ, t[2])
+        t[0] = Binary(t[1], Operator.EQ, t[3])
     elif t[2] == "!=":
-        t[0] = Binary(t[1], Operator.NEQ, t[2])
+        t[0] = Binary(t[1], Operator.NEQ, t[3])
     elif t[2] == "<":
-        t[0] = Binary(t[1], Operator.LS, t[2])
+        t[0] = Binary(t[1], Operator.LS, t[3])
     elif t[2] == ">":
-        t[0] = Binary(t[1], Operator.GR, t[2])
+        t[0] = Binary(t[1], Operator.GR, t[3])
     elif t[2] == "<=":
-        t[0] = Binary(t[1], Operator.LSE, t[2])
+        t[0] = Binary(t[1], Operator.LSE, t[3])
     elif t[2] == ">=":
-        t[0] = Binary(t[1], Operator.GRE, t[2])
+        t[0] = Binary(t[1], Operator.GRE, t[3])
     elif t[2] == "<<":
-        t[0] = Binary(t[1], Operator.SHL, t[2])
+        t[0] = Binary(t[1], Operator.SHL, t[3])
     elif t[2] == ">>":
-        t[0] = Binary(t[1], Operator.SHR, t[2])
+        t[0] = Binary(t[1], Operator.SHR, t[3])
     elif t[2] == "+":
-        t[0] = Binary(t[1], Operator.PLUS, t[2])
+        t[0] = Binary(t[1], Operator.PLUS, t[3])
     elif t[2] == "-":
-        t[0] = Binary(t[1], Operator.MINUS, t[2])
+        t[0] = Binary(t[1], Operator.MINUS, t[3])
     elif t[2] == "*":
-        t[0] = Binary(t[1], Operator.TIMES, t[2])
+        t[0] = Binary(t[1], Operator.TIMES, t[3])
     elif t[2] == "/":
-        t[0] = Binary(t[1], Operator.QUOTIENT, t[2])
+        t[0] = Binary(t[1], Operator.QUOTIENT, t[3])
     elif t[2] == "%":
-        t[0] = Binary(t[1], Operator.REMAINDER, t[2])
+        t[0] = Binary(t[1], Operator.REMAINDER, t[3])
+
 def p_binaryExpression18(t):
     '''binaryExpressions   :   unaryExpression'''
     t[0] = t[1]

@@ -19,9 +19,10 @@ reserved = {
     'break': 'BREAK',
     'default': 'DEFAULT',
     'return': 'RETURN',
-    #'true': 'TRUE',
-    #'false': 'FALSE',
-    'sizeof': 'SIZEOF'
+    'true': 'TRUE',
+    'false': 'FALSE',
+    'sizeof': 'SIZEOF',
+    'goto' : 'GOTO'
 }
 
 tokens = [

@@ -22,11 +22,7 @@ class Postfix(Instruction):
                     return ("rawvalue", 0)
                 for param in acc[1]:
                     p = param.firstRun(localE)
-                    arg1 = 0
-                    if p[0] == "symbol" and p[1].type == 1:  # debe ser una variable
-                        arg1 = p[1].temp
-                    elif p[0] == "rawvalue":
-                        arg1 = p[1]
+                    arg1 = p[1].temp if p[0] == "symbol" and p[1].type == 1 else p[1]
                     q0 = Quadruple(OperatorQuadruple.ASSIGNMENT,
                                    arg1, None, "$s0[$sp]")
                     q1 = Quadruple(OperatorQuadruple.PLUS, "$sp", 1, "$sp")
@@ -52,22 +48,26 @@ class Postfix(Instruction):
                 # crea un nuevo cuadruple, aumenta el contador de temporales
                 # incrementa el valor temporal t
                 # devuelve el nombre del valor asignado inicialmente en q0
+                arg1 = t0[1].temp if t0[0] == "symbol" else t0[1]
                 q0 = Quadruple(OperatorQuadruple.ASSIGNMENT,
-                               t0[1], None, f"$t{SymbolTable.IdxTempVar}")
+                               arg1, None, f"$t{SymbolTable.IdxTempVar}")
                 Quadruple.QDict.append(q0)
                 SymbolTable.IdxTempVar += 1
                 Quadruple.QDict.append(
-                    Quadruple(OperatorQuadruple.PLUS, t0[1], 1, t0[1]))
+                    Quadruple(OperatorQuadruple.PLUS, arg1, 1, arg1))
                 return ("tempname", q0.r)
             elif acc[0] == Operator.DECREMENT:
+                arg1 = t0[1].temp if t0[0] == "symbol" else t0[1]
                 q0 = Quadruple(OperatorQuadruple.ASSIGNMENT,
-                               t0[1], None, f"$t{SymbolTable.IdxTempVar}")
+                               arg1, None, f"$t{SymbolTable.IdxTempVar}")
                 Quadruple.QDict.append(q0)
                 SymbolTable.IdxTempVar += 1
                 Quadruple.QDict.append(
-                    Quadruple(OperatorQuadruple.MINUS, t0[1], 1, t0[1]))
+                    Quadruple(OperatorQuadruple.MINUS, arg1, 1, arg1))
                 return ("tempname", q0.r)
-        arracc = ""
-        for i in self.access:
-            arracc += f"[{i}]"
-        return ("rawvalue", f"{t0[1].temp}{arracc}")
+        if len(self.access) > 0:
+            arracc = ""
+            for i in self.access:
+                arracc += f"[{i}]"
+            return ("rawvalue", f"{t0[1].temp}{arracc}")
+        return("rawvalue", 0)

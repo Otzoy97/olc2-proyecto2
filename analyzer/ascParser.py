@@ -14,6 +14,7 @@ from interpreter.operator import Operator
 from interpreter.expression.primary import Primary, PrimaryType
 from interpreter.expression.postfix import Postfix
 from interpreter.expression.binary import Binary
+from interpreter.expression.unary import Unary
 from interpreter.expression.conditional import Conditional
 from interpreter.expression.assignment import Assignment
 from interpreter.expression.jump import Jump

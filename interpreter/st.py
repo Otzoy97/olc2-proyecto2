@@ -62,7 +62,7 @@ class SymbolTable():
             #increase idx
             SymbolTable.IdxTempVar += 1
             #set return label
-            q = Quadruple.addLabel()
+            q = Quadruple.createLabel(name)
             sym.returnLabel = q.r
 
     def find(self, name):

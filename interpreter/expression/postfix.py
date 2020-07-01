@@ -21,6 +21,7 @@ class Postfix(Instruction):
                 if t0[1].type != 0:  # si no es una función no hace nada
                     return ("rawvalue", 0)
                 for param in acc[1]:
+                    #Recupera los parametros
                     p = param.firstRun(localE)
                     arg1 = p[1].temp if p[0] == "symbol" and p[1].type == 1 else p[1]
                     q0 = Quadruple(OperatorQuadruple.ASSIGNMENT,
@@ -69,5 +70,8 @@ class Postfix(Instruction):
             arracc = ""
             for i in self.access:
                 arracc += f"[{i}]"
-            return ("rawvalue", f"{t0[1].temp}{arracc}")
+            q0 = Quadruple(OperatorQuadruple.ASSIGNMENT,  f"{t0[1].temp}{arracc}", None, f"$t{SymbolTable.IdxTempVar}")
+            SymbolTable.IdxTempVar += 1
+            Quadruple.QDict.append(q0)
+            return ("tempname", q0.r)
         return("rawvalue", 0)

@@ -11,7 +11,7 @@ class Operator(Enum):
     UMINUS = 7
     NOTBW = 8
     NOT = 9
-    CAST = 10
+    CASTINT = 10
     SIZEOF = 11
     TIMES = 12
     QUOTIENT = 13
@@ -42,3 +42,5 @@ class Operator(Enum):
     ANDBWA = 38
     XORBWA = 39
     ORBWA = 40
+    CASTFLOAT = 41
+    CASTCHAR = 42

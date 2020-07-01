@@ -6,70 +6,41 @@ from interpreter.quadruple import Quadruple, OperatorQuadruple
 from copy import deepcopy
 
 class Postfix(Instruction):
-    def __init__(self, exp, acc, row):
-        self.exp = exp
-        self.acc = acc
-        self.row = row
+    def __init__(self, exp1, op, exp2):
+        self.exp1 = exp1
+        self.op = op
+        self.exp2 = exp2
         self.access = []
 
     def firstRun(self, localE):
-        t0 = self.exp.firstRun(localE)
-        if t0[0] == "rawvalue":
-            return t0
-        for acc in self.acc:
-            if acc[0] == Operator.CALL:
-                for param in acc[1]:
-                    #Recupera los parametros
-                    p = param.firstRun(localE)
-                    arg1 = p[1].temp if p[0] == "symbol" and p[1].type == 1 else p[1]
-                    q0 = Quadruple(OperatorQuadruple.ASSIGNMENT,
-                                   arg1, None, "$s0[$sp]")
-                    q1 = Quadruple(OperatorQuadruple.PLUS, "$sp", 1, "$sp")
-                    Quadruple.QDict.append(q0)
-                    Quadruple.QDict.append(q1)
-                q2 = Quadruple(OperatorQuadruple.GOTO, t0[0].temp, None, None)
-                Quadruple.QDict.append(q2)
-                q3 = Quadruple(OperatorQuadruple.LABEL,
-                               t0[0].returnLabel, None, None)
-                Quadruple.QDict.append(q3)
-                return ("rawvalue", "$v0")
-            elif acc[0] == Operator.STRUCTACCESS:
-                self.access.append(str(f'"{acc[1]}"'))
-            elif acc[0] == Operator.ARRAYACCESS:
-                p = acc[1].firstRun(localE)
-                arg1 = 0
-                if p[0] == "symbol" and p[1].type == 1:  # debe ser una variable
-                    arg1 = p[1].temp
-                elif p[0] == "rawvalue":
-                    arg1 = p[1]
-                self.access.append(arg1)
-            elif acc[0] == Operator.INCREMENT:
-                # crea un nuevo cuadruple, aumenta el contador de temporales
-                # incrementa el valor temporal t
-                # devuelve el nombre del valor asignado inicialmente en q0
-                arg1 = t0[1].temp if t0[0] == "symbol" else t0[1]
-                q0 = Quadruple(OperatorQuadruple.ASSIGNMENT,
-                               arg1, None, f"$t{SymbolTable.IdxTempVar}")
-                Quadruple.QDict.append(q0)
-                SymbolTable.IdxTempVar += 1
-                Quadruple.QDict.append(
-                    Quadruple(OperatorQuadruple.PLUS, arg1, 1, arg1))
-                return ("tempname", q0.r)
-            elif acc[0] == Operator.DECREMENT:
-                arg1 = t0[1].temp if t0[0] == "symbol" else t0[1]
-                q0 = Quadruple(OperatorQuadruple.ASSIGNMENT,
-                               arg1, None, f"$t{SymbolTable.IdxTempVar}")
-                Quadruple.QDict.append(q0)
-                SymbolTable.IdxTempVar += 1
-                Quadruple.QDict.append(
-                    Quadruple(OperatorQuadruple.MINUS, arg1, 1, arg1))
-                return ("tempname", q0.r)
-        if len(self.access) > 0:
-            arracc = ""
-            for i in self.access:
-                arracc += f"[{i}]"
-            q0 = Quadruple(OperatorQuadruple.ASSIGNMENT,  f"{t0[1].temp}{arracc}", None, f"$t{SymbolTable.IdxTempVar}")
-            SymbolTable.IdxTempVar += 1
+        arg1 = self.exp1.firstRun(localE)
+        arg1Name = arg1[1].temp if arg1[0] == "symbol" else arg1[1]
+        if self.op == Operator.ARRAYACCESS:
+            exp = self.exp2.firstRun(localE)
+            expName = exp[1].temp if exp[0] == "symbol" else exp[1]
+            return ("tempname", f"{arg1Name}[{expName}]")
+        elif self.op == Operator.STRUCTACCESS:
+            return ("tempname", f"{arg1Name}[{self.exp2}]")
+        elif self.op == Operator.CALL:
+            if arg1[0] !=  "symbol":
+                return ("rawvalue", 0)
+            for param in self.exp2:
+                p = param.firstRun(localE)
+                pName = p[1].temp if p[0] == "symbol" else p[1]
+                Quadruple.QDict.append(Quadruple(OperatorQuadruple.ASSIGNMENT, pName, None, "$s0[$sp]"))
+                Quadruple.QDict.append(Quadruple(OperatorQuadruple.PLUS, "$sp", 1, "$sp"))
+            Quadruple.QDict.append(Quadruple(OperatorQuadruple.GOTO, arg1Name, None, None))
+            Quadruple.QDict.append(Quadruple(OperatorQuadruple.LABEL, arg1[1].returnLabel, None, None))
+            return ("tempname", "$v0")
+        elif self.op == Operator.INCREMENT:
+            q0 = Quadruple(OperatorQuadruple.ASSIGNMENT, arg1Name, None, f"$t{SymbolTable.IdxTempVar}")
             Quadruple.QDict.append(q0)
+            SymbolTable.IdxTempVar += 1
+            Quadruple.QDict.append(Quadruple(OperatorQuadruple.PLUS, arg1Name, 1, arg1Name))
             return ("tempname", q0.r)
-        return("rawvalue", 0)
+        elif self.op == Operator.DECREMENT:
+            q0 = Quadruple(OperatorQuadruple.ASSIGNMENT, arg1Name, None, f"$t{SymbolTable.IdxTempVar}")
+            Quadruple.QDict.append(q0)
+            SymbolTable.IdxTempVar += 1
+            Quadruple.QDict.append(Quadruple(OperatorQuadruple.MINUS, arg1Name, 1, arg1Name))
+            return ("tempname", q0.r)

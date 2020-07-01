@@ -164,12 +164,12 @@ def p_declarator3(t):
     t[0] = None
 
 def p_dec_cor_list0(t):
-    '''dec_cor_list     :   dec_cor_list CORL constantExpression CORR'''
+    '''dec_cor_list     :   dec_cor_list CORL INT_VAL CORR'''
     t[1].append(t[3])
     t[0] = t[1]
 
 def p_dec_cor_list1(t):
-    '''dec_cor_list     :   CORL constantExpression CORR'''
+    '''dec_cor_list     :   CORL INT_VAL CORR'''
     t[0] = [t[2]]
 
 def p_par_list0(t):
@@ -446,51 +446,27 @@ def p_postExpression0(t):
 
 def p_postExpression1(t):
     '''postfixExpression :  postfixExpression CORL expression CORR'''
-    if isinstance(t[1], Primary):
-        t[0] = Postfix(t[1], [(Operator.ARRAYACCESS, t[3])], t.lexer.lexdata[0: t.lexer.lexpos].count("\n") + 1)
-    elif isinstance(t[1], Postfix):
-        t[1].acc.append((Operator.ARRAYACCESS, t[3]))
-        t[0] = t[1]
+    t[0] = Postfix(t[1], Operator.ARRAYACCESS, t[3])
     
 def p_postExpression2(t):
     '''postfixExpression :  postfixExpression PARL PARR'''
-    if isinstance(t[1], Primary):
-        t[0] = Postfix(t[1], [(Operator.CALL, [])], t.lexer.lexdata[0: t.lexer.lexpos].count("\n") + 1)
-    elif isinstance(t[1], Postfix):
-        t[1].acc.append((Operator.CALL, []))
-        t[0] = t[1]
+    t[0] = Postfix(t[1], Operator.CALL, None)
 
 def p_postExpression3(t):
     '''postfixExpression :  postfixExpression PARL assignmentExpressionList PARR'''
-    if isinstance(t[1], Primary):
-        t[0] = Postfix(t[1], [(Operator.CALL, t[3])], t.lexer.lexdata[0: t.lexer.lexpos].count("\n") + 1)
-    elif isinstance(t[1], Postfix):
-        t[1].acc.append((Operator.CALL, t[3]))
-        t[0] = t[1]
+    t[0] = Postfix(t[1], Operator.CALL, t[3])
 
 def p_postExpression4(t):
     '''postfixExpression :  postfixExpression DOT ID'''
-    if isinstance(t[1], Primary):
-        t[0] = Postfix(t[1], [(Operator.STRUCTACCESS, t[3])], t.lexer.lexdata[0: t.lexer.lexpos].count("\n") + 1)
-    elif isinstance(t[1], Postfix):
-        t[1].acc.append((Operator.STRUCTACCESS, t[3]))
-        t[0] = t[1]
+    t[0] = Postfix(t[1], Operator.STRUCTACCESS, t[3])
 
 def p_postExpression5(t):
     '''postfixExpression :  postfixExpression INC'''
-    if isinstance(t[1], Primary):
-        t[0] = Postfix(t[1], [(Operator.INCREMENT, t[3])], t.lexer.lexdata[0: t.lexer.lexpos].count("\n") + 1)
-    elif isinstance(t[1], Postfix):
-        t[1].acc.append((Operator.INCREMENT, t[3]))
-        t[0] = t[1]
+    t[0] = Postfix(t[1], Operator.INCREMENT, None)
 
 def p_postExpression6(t):
     '''postfixExpression :  postfixExpression DEC'''
-    if isinstance(t[1], Primary):
-        t[0] = Postfix(t[1], [(Operator.DECREMENT, t[3])], t.lexer.lexdata[0: t.lexer.lexpos].count("\n") + 1)
-    elif isinstance(t[1], Postfix):
-        t[1].acc.append((Operator.DECREMENT, t[3]))
-        t[0] = t[1]
+    t[0] = Postfix(t[1], Operator.DECREMENT, None)
 
 def p_fExpression0(t):
     '''primaryExpression :  constant'''

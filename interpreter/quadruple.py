@@ -46,10 +46,10 @@ class Quadruple():
     IdxLabel = 0
 
     @staticmethod
-    def addLabel(lbl = None):
+    def createLabel(lbl = None):
         if lbl == None:
             lbl =  f"L{Quadruple.IdxLabel}"
             Quadruple.IdxLabel += 1
         q = Quadruple(OperatorQuadruple.LABEL, None, None, lbl)
-        Quadruple.QDict.append(q)
+        #Quadruple.QDict.append(q)
         return q   

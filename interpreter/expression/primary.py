@@ -15,7 +15,7 @@ class Primary(Instruction):
     def firstRun(self, localE):
         if self.type == 1:
             #it is an identifier, look for it in the symbols table
-            sym = localE.symTable.find(self.value)
+            sym = localE.findSymbol(self.value)
             if sym != None:
                 #there's a symbol associated with this identificator
                 #return a temporary label

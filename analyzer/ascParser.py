@@ -164,12 +164,12 @@ def p_declarator3(t):
     t[0] = None
 
 def p_dec_cor_list0(t):
-    '''dec_cor_list     :   dec_cor_list CORL INT_VAL CORR'''
+    '''dec_cor_list     :   dec_cor_list CORL constant CORR'''
     t[1].append(t[3])
     t[0] = t[1]
 
 def p_dec_cor_list1(t):
-    '''dec_cor_list     :   CORL INT_VAL CORR'''
+    '''dec_cor_list     :   CORL constant CORR'''
     t[0] = [t[2]]
 
 def p_par_list0(t):
@@ -290,7 +290,7 @@ def p_expression1(t):
 
 def p_assignmentExpression0(t):
     '''assignmentExpression :   conditionalExpression'''
-    t[0] = Assignment(None, None, t[1], t.lexer.lexdata[0: t.lexer.lexpos].count("\n") + 1)
+    t[0] = t[1]
 
 def p_assignmentExpression1(t):
     '''assignmentExpression : unaryExpression assignmentOperator conditionalExpression'''

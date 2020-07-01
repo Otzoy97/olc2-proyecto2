@@ -40,7 +40,7 @@ class SymbolTable():
         '''add a variable'''
         if not name in self.table:
             #set temp variable name
-            sym.temp = str(f"$t{SymbolTable.IdxTempVar}")
+            #sym.temp = str(f"$t{SymbolTable.IdxTempVar}")
             #add variable to symbol table
             self.table[name] = sym
             #make a deep copy of the symbol
@@ -48,7 +48,8 @@ class SymbolTable():
             #add the symbol to global symbol table
             SymbolTable.St[name] = symC
             #increase idx
-            SymbolTable.IdxTempVar += 1
+            #SymbolTable.IdxTempVar += 1
+            #return sym.temp
     
     def addFunction(self, name, sym):
         '''add a function'''

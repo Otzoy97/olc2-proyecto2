@@ -18,8 +18,6 @@ class Postfix(Instruction):
             return t0
         for acc in self.acc:
             if acc[0] == Operator.CALL:
-                if t0[1].type != 0:  # si no es una función no hace nada
-                    return ("rawvalue", 0)
                 for param in acc[1]:
                     #Recupera los parametros
                     p = param.firstRun(localE)

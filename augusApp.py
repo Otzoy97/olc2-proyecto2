@@ -8,6 +8,8 @@ from MinorCSyntaxHighligther import MinorCSyntaxHighligther
 from analyzer.ascParser import parse as ascParse, parser as ascParser
 from analyzer.err import createReport
 from interpreter.expression.struct import Struct
+from interpreter.st import SymbolTable, Symbol
+from interpreter.quadruple import Quadruple
 
 class Ui_augusApp(QtWidgets.QMainWindow):
     
@@ -264,7 +266,7 @@ class Ui_augusApp(QtWidgets.QMainWindow):
         self.actionGo_To.triggered.connect(self.goTo_action)
         # -- Run menu actions
         #self.actionAscendent_Debugging.triggered.connect(self.ascendentDebug_action)
-        #self.actionAscendent_Without_Debugging.triggered.connect(self.ascendentRun_action)
+        self.actionAscendent_Without_Debugging.triggered.connect(self.ascendentRun_action)
         #self.actionDescendent_Without_Debugging.triggered.connect(self.descendentRun_action)
 
         #self.actionStop_Debugging.triggered.connect(self.stopDebug_action)
@@ -396,12 +398,19 @@ class Ui_augusApp(QtWidgets.QMainWindow):
         t = ascParse(txt)
         #print(t)
         try:
-            for i in t:
-                if isinstance(i.exp[0], Struct):
-                    print(f" {i.exp[0].id}, {i.exp[0].dec} : {i.exp[1]}")
-                else:
-                    print(f" {i.exp[0]}: {i.exp[1]}")
-        except:
+            Quadruple.QDict.clear()
+            SymbolTable.St.clear()
+            SymbolTable.IdxTempVar = 0
+            Quadruple.IdxLabel = 0
+            if t != None:
+                t.firstRun()
+                for k,v in SymbolTable.St.items():
+                    print(f"{k}->(temp: {v.temp}, dimension: {v.dimension}, struct: {v.struct}, value: {v.value})")
+                for q in Quadruple.QDict:
+                    print(f"{q.r} <-> {q.arg1} {q.op} {q.arg2}")
+        except Exception as e:
+            print("es gg ->", str(e))
+        finally:
             try:
                 createReport()
             except:
@@ -434,72 +443,6 @@ class Ui_augusApp(QtWidgets.QMainWindow):
             elif msg == QtWidgets.QMessageBox.Cancel:
                 event.ignore()
     
-class SymbolsGrid(QtWidgets.QDialog):
-    def __init__(self, parent = None):
-        super(SymbolsGrid, self).__init__(parent)
-        self.setupUi()
-        self.closeEvent
-        self.installEventFilter(self)
-
-    def setupUi(self):
-        self.setObjectName("Form")
-        self.setWindowModality(QtCore.Qt.ApplicationModal)
-        self.resize(640, 480)
-        self.setModal(False)
-        self.setMinimumSize(QtCore.QSize(640, 480))
-        icon = QtGui.QIcon()
-        icon.addPixmap(QtGui.QPixmap("augus.ico"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        self.setWindowIcon(icon)
-        self.gridLayout = QtWidgets.QGridLayout(self)
-        self.gridLayout.setObjectName("gridLayout")
-        self.tableWidget = QtWidgets.QTableWidget(self)
-        self.tableWidget.setEnabled(True)
-        self.tableWidget.setFrameShape(QtWidgets.QFrame.NoFrame)
-        self.tableWidget.setFrameShadow(QtWidgets.QFrame.Raised)
-        self.tableWidget.setSizeAdjustPolicy(QtWidgets.QAbstractScrollArea.AdjustIgnored)
-        self.tableWidget.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
-        self.tableWidget.setDragEnabled(False)
-        self.tableWidget.setAlternatingRowColors(True)
-        self.tableWidget.setGridStyle(QtCore.Qt.SolidLine)
-        self.tableWidget.setRowCount(1)
-        self.tableWidget.setColumnCount(5)
-        self.tableWidget.setObjectName("tableWidget")
-        item = QtWidgets.QTableWidgetItem()
-        self.tableWidget.setHorizontalHeaderItem(0, item)
-        item = QtWidgets.QTableWidgetItem()
-        self.tableWidget.setHorizontalHeaderItem(1, item)
-        item = QtWidgets.QTableWidgetItem()
-        self.tableWidget.setHorizontalHeaderItem(2, item)
-        item = QtWidgets.QTableWidgetItem()
-        self.tableWidget.setHorizontalHeaderItem(3, item)
-        item = QtWidgets.QTableWidgetItem()
-        self.tableWidget.setHorizontalHeaderItem(4, item)
-        self.gridLayout.addWidget(self.tableWidget, 0, 0, 1, 1)
-        self.setWindowTitle("Symbols table")
-        self.tableWidget.setSortingEnabled(True)
-        item = self.tableWidget.horizontalHeaderItem(0)
-        item.setText("Id.")
-        item = self.tableWidget.horizontalHeaderItem(1)
-        item.setText("Type")
-        item = self.tableWidget.horizontalHeaderItem(2)
-        item.setText("Value")
-        item = self.tableWidget.horizontalHeaderItem(3)
-        item.setText("Dimension")
-        item = self.tableWidget.horizontalHeaderItem(4)
-        item.setText("Ref.")
-
-    def updateGrid(self):
-        '''refresh the values on the symbols table'''
-        pass
-
-    def eventFilter(self, obj, event):
-        if event.type() == QtCore.QEvent.KeyPress:
-            if event.key() in (QtCore.Qt.Key_Return,
-                QtCore.Qt.Key_Escape,
-                QtCore.Qt.Key_Enter,):
-                return True
-        return super(SymbolsGrid, self).eventFilter(obj,event)
-
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
     u = Ui_augusApp()

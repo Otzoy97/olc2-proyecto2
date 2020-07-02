@@ -10,10 +10,10 @@ class Assignment(Instruction):
         self.exp2 = exp2
         self.row = row
     
-    def firstRun(self, localE):
-        exp2Name = self.exp2.firstRun(localE)
+    def firstRun(self, localE, parent):
+        exp2Name = self.exp2.firstRun(localE, parent)
         exp2Name = exp2Name[1].temp if exp2Name[0] == "symbol" else exp2Name[1]
-        exp1Name = self.exp1.firstRun(localE)
+        exp1Name = self.exp1.firstRun(localE, parent)
         exp1Name = exp1Name[1].temp if exp1Name[0] == "symbol" else exp1Name[1]
         if Operator.ASSIGN == self.assignment_type:
             q0 = Quadruple(OperatorQuadruple.ASSIGNMENT,exp2Name,None,exp1Name)

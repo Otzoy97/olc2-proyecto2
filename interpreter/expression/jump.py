@@ -8,7 +8,7 @@ class Jump(Instruction):
         self.exp = exp
         self.op = op
 
-    def firstRun(self, localE):
+    def firstRun(self, localE, parent):
         if self.op == Operator.CONTINUE_:
             pass
         elif self.op == Operator.BREAK_:
@@ -17,7 +17,7 @@ class Jump(Instruction):
             if self.exp == None:
                 Quadruple.QDict.append(Quadruple(OperatorQuadruple.GOTO, f"ret0", None, None))
             else:
-                expName = self.exp.firstRun(localE)
+                expName = self.exp.firstRun(localE, parent)
                 expName = expName[1].temp if expName[0] == "symbol"  else expName[1]
                 Quadruple.QDict.append(Quadruple(OperatorQuadruple.ASSIGNMENT, expName, None, "$v0"))
                 return ("rawvalue", 0)

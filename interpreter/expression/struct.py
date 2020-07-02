@@ -5,5 +5,5 @@ class Struct(Instruction):
         self.id = id
         self.dec = dec
 
-    def firstRun(self):
+    def firstRun(self, localE, parent):
         pass

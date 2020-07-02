@@ -8,8 +8,8 @@ class Unary(Instruction):
         self.exp = exp
         self.op = op
 
-    def firstRun(self, localE):
-        args = self.exp.firstRun(localE)
+    def firstRun(self, localE, parent):
+        args = self.exp.firstRun(localE, parent)
         tempName = args[1].temp if args[0] == "symbol" else args[1]
         if self.op == Operator.CASTINT:
             q0 = Quadruple(OperatorQuadruple.ASSIGNMENT, f"(int){tempName}", None, f"$t{SymbolTable.IdxTempVar}")

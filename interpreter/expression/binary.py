@@ -9,9 +9,9 @@ class Binary(Instruction):
         self.op = op
         self.exp2 = exp2
 
-    def firstRun(self, localE):
-        arg1 = self.exp1.firstRun(localE)
-        arg2 = self.exp2.firstRun(localE)
+    def firstRun(self, localE, parent):
+        arg1 = self.exp1.firstRun(localE, parent)
+        arg2 = self.exp2.firstRun(localE, parent)
         tempName1 = arg1[1].temp if arg1[0] == "symbol" else arg1[1]
         tempName2 = arg2[1].temp if arg2[0] == "symbol" else arg2[1]
         q0 = Quadruple(self.setOperator(), tempName1, tempName2, f"$t{SymbolTable.IdxTempVar}")

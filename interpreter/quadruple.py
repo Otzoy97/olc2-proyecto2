@@ -97,7 +97,7 @@ class Quadruple():
                 elif quad.op == OperatorQuadruple.IF:
                     f.write(f"if ({quad.arg1}) goto {quad.r};\n")
                 elif quad.op == OperatorQuadruple.GOTO:
-                    f.write(f"goto {quad.r};\n")
+                    f.write(f"goto {quad.arg1};\n")
                 elif quad.op in Quadruple.BinaryOp:
                     f.write(f"{quad.r} = {quad.arg1} {quad.op.value} {quad.arg2};\n")
                 elif quad.op in Quadruple.UnaryOp:

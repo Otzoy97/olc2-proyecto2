@@ -19,7 +19,7 @@ class Symbol():
         self.temp = temp
         self.value = value
         self.type = type
-        self.environment = environment
+        #self.environment = environment
         self.row = row
         self.dimension = []
         self.parlist = []
@@ -84,7 +84,7 @@ class SymbolTable():
             f.write("<td>Valor</td>\n")
             f.write("<td>Tipo</td>\n")
             f.write("<td>Fila</td>\n")
-            f.write("<td>Entorno</td>\n")
+            #f.write("<td>Entorno</td>\n")
             f.write("</tr>\n")
             for k,v in SymbolTable.St.items():
                 f.write("<tr>\n")
@@ -94,7 +94,7 @@ class SymbolTable():
                 f.write(f"<td>{v.value}</td>\n")
                 f.write(f"<td>{v.type.name}</td>\n")
                 f.write(f"<td>{v.row}</td>\n")
-                f.write(f"<td>{v.environment}</td>\n")
+                #f.write(f"<td>{v.environment}</td>\n")
                 f.write("</tr>\n")
             f.write("</table>\n")
             f.write("</body>\n")

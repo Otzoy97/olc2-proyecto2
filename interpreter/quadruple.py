@@ -79,7 +79,7 @@ class Quadruple():
     def create3DCode():
         '''this function creates a file with all the instructions
             stored id QDict'''
-        with open("augus3DCode.aug", "w+") as f:
+        with open("augus3DCode.txt", "w") as f:
             for quad in Quadruple.QDict:
                 if quad.op == OperatorQuadruple.ASSIGNMENT:
                     f.write(f"{quad.r} = {quad.arg1};\n")
@@ -93,4 +93,4 @@ class Quadruple():
                     f.write(f"{quad.r} = {quad.arg1} {quad.op.value} {quad.arg2};\n")
                 elif quad.op in Quadruple.UnaryOp:
                     f.write(f"{quad.r} = {quad.op.value}{quad.arg1};\n")
-        #return f.read()
+        return "augus3DCode.txt"

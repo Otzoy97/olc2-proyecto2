@@ -11,7 +11,7 @@ from interpreter.expression.struct import Struct
 from interpreter.st import SymbolTable, Symbol
 from interpreter.quadruple import Quadruple
 
-from Pantalla import Ui_MainWindow
+import os
 
 class Ui_augusApp(QtWidgets.QMainWindow):
     
@@ -134,30 +134,8 @@ class Ui_augusApp(QtWidgets.QMainWindow):
         self.actionReplace.setObjectName("actionReplace")
         self.actionAbout = QtWidgets.QAction(self)
         self.actionAbout.setObjectName("actionAbout")
-        #self.actionDark_Mode = QtWidgets.QAction(self)
-        #self.actionDark_Mode.setCheckable(True)
-        #self.actionDark_Mode.setObjectName("actionDark_Mode")
-        #self.actionAscendent_Debugging = QtWidgets.QAction(self)
-        #self.actionAscendent_Debugging.setObjectName("actionAscendent_Debugging")
         self.actionAscendent_Without_Debugging = QtWidgets.QAction(self)
         self.actionAscendent_Without_Debugging.setObjectName("actionAscendent_Without_Debugging")
-        #self.actionDescendent_Without_Debugging = QtWidgets.QAction(self)
-        #self.actionDescendent_Without_Debugging.setObjectName("actionDescendent_Without_Debugging")
-        #self.actionRestart_Debugging = QtWidgets.QAction(self)
-        #self.actionRestart_Debugging.setEnabled(False)
-        #self.actionRestart_Debugging.setObjectName("actionRestart_Debugging")
-        #self.actionStop_Debugging = QtWidgets.QAction(self)
-        #self.actionStop_Debugging.setEnabled(False)
-        #self.actionStop_Debugging.setObjectName("actionStop_Debugging")
-        #self.actionStep_Into = QtWidgets.QAction(self)
-        #self.actionStep_Into.setEnabled(False)
-        #self.actionStep_Into.setObjectName("actionStep_Into")
-        #self.actionContinue = QtWidgets.QAction(self)
-        #self.actionContinue.setEnabled(False)
-        #self.actionContinue.setObjectName("actionContinue")
-        #self.actionShowSymbolTable = QtWidgets.QAction(self)
-        #self.actionShowSymbolTable.setEnabled(False)
-        #self.actionShowSymbolTable.setObjectName("actionShowSymbolTable")
         self.actionGo_To = QtWidgets.QAction(self)
         self.actionGo_To.setObjectName("actionGo_To")
         self.menuFile.addAction(self.actionNew)
@@ -178,16 +156,8 @@ class Ui_augusApp(QtWidgets.QMainWindow):
         self.menuEdit.addAction(self.actionReplace)
         self.menuEdit.addSeparator()
         self.menuEdit.addAction(self.actionGo_To)
-        #self.menuRun.addAction(self.actionAscendent_Debugging)
         self.menuRun.addAction(self.actionAscendent_Without_Debugging)
-        #self.menuRun.addAction(self.actionDescendent_Without_Debugging)
         self.menuRun.addSeparator()
-        #self.menuRun.addAction(self.actionRestart_Debugging)
-        ##self.menuRun.addAction(self.actionStop_Debugging)
-        #self.menuRun.addAction(self.actionStep_Into)
-        #self.menuRun.addAction(self.actionContinue)
-        #self.menuRun.addAction(self.actionShowSymbolTable)
-        #self.menuTools.addAction(self.actionDark_Mode)
         self.menuHelp.addAction(self.actionAbout)
         self.menubar.addAction(self.menuFile.menuAction())
         self.menubar.addAction(self.menuEdit.menuAction())
@@ -285,7 +255,6 @@ class Ui_augusApp(QtWidgets.QMainWindow):
     
     def saveFileAs_action(self):
         """Shows a file dialog to save a file at a directory. Retrieve file name and puts it as a reference to a file"""
-        #fileName = QtWidgets.QFileDialog.getSaveFileName(self, 'Save As', str(Path.home()), "Augus files (*.aug)")
         fileName = QtWidgets.QFileDialog.getSaveFileName(self, 'Save As', str(Path.home()))
         if fileName[0]:
             with codecs.open(fileName[0],'w', encoding='utf8') as f:
@@ -307,7 +276,6 @@ class Ui_augusApp(QtWidgets.QMainWindow):
                 self.saveFile_action()
             elif msg == QtWidgets.QMessageBox.Cancel:
                 return
-        #fileName = QtWidgets.QFileDialog.getOpenFileName(self, 'Open', str(Path.home()), "Augus files (*.aug)")
         fileName = QtWidgets.QFileDialog.getOpenFileName(self, 'Open', str(Path.home()))
         if fileName[0]:
             try:
@@ -370,7 +338,7 @@ class Ui_augusApp(QtWidgets.QMainWindow):
     def ascendentRun_action(self):
         txt = self.txtInput.toPlainText()
         t = ascParse(txt)
-        #print(t)
+        print(t)
         try:
             Quadruple.QDict.clear()
             SymbolTable.St.clear()
@@ -383,11 +351,13 @@ class Ui_augusApp(QtWidgets.QMainWindow):
                 for q in Quadruple.QDict:
                     print(f"{q.r} <-> {q.arg1} {q.op} {q.arg2}")
             p = Quadruple.create3DCode()
-            self.pantalla = Ui_MainWindow()
+            print(p)
+            os.system(f"start {p}")
         except Exception as e:
             print("es gg ->", str(e))
         finally:
             try:
+                SymbolTable.genRep()
                 createReport()
             except:
                 pass

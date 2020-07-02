@@ -75,4 +75,34 @@ class SymbolTable():
     @staticmethod
     def genRep():
         '''create a report of the stored symbols in St '''
-        pass
+        with open("st.html", "w", encoding='utf8') as f:
+            f.write("<html>\n<head>\n<title>Tabla de simbolos</title>\n</head>\n")
+            f.write("<body>\n")
+            f.write('<table border=1 align=center style="width:100%">\n')
+            f.write("<tr>\n")
+            f.write("<td>Id.</td>\n")
+            f.write("<td>Ref</td>\n")
+            f.write("<td>Dimensión</td>\n")
+            f.write("<td>Struct</td>\n")
+            f.write("<td>Valor</td>\n")
+            f.write("<td>Tipo</td>\n")
+            f.write("<td>Fila</td>\n")
+            f.write("<td>Entorno</td>\n")
+            f.write("</tr>\n")
+            for k,v in SymbolTable.St.items():
+                f.write("<tr>\n")
+                f.write(f"<td>{k}</td>\n")
+                f.write(f"<td>{v.temp}</td>\n")
+                f.write(f"<td>{v.dimension if len(v.dimension) > 0 else None}</td>\n")
+                f.write(f"<td>")
+                for i in v.struct:
+                    f.write(f"{i}<br>")
+                f.write(f"</td>\n")
+                f.write(f"<td>{v.value}</td>\n")
+                f.write(f"<td>{v.type.name}</td>\n")
+                f.write(f"<td>{v.row}</td>\n")
+                f.write(f"<td>{v.environment}</td>\n")
+                f.write("</tr>\n")
+            f.write("</table>\n")
+            f.write("</body>\n")
+            f.write("</html>\n")

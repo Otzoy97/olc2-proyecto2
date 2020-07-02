@@ -39,6 +39,15 @@ class Quadruple():
 
     QDict = []
     IdxLabel = 0
+    IdxReturn = 0
+    QReturn = []
+
+    @staticmethod
+    def addReturnLabel():
+        Quadruple.IdxReturn += 1
+        Quadruple.QReturn.append(Quadruple(OperatorQuadruple.IF, f"$s0[$sp] == {Quadruple.IdxReturn}", None, f"ret{Quadruple.IdxReturn}"))
+        return Quadruple.IdxReturn
+
     BinaryOp = [
         OperatorQuadruple.PLUS,
         OperatorQuadruple.MINUS,
@@ -86,7 +95,7 @@ class Quadruple():
                 elif quad.op == OperatorQuadruple.LABEL:
                     f.write(f"{quad.r}:\n")
                 elif quad.op == OperatorQuadruple.IF:
-                    f.write(f"if {quad.arg1} goto {quad.r};\n")
+                    f.write(f"if ({quad.arg1}) goto {quad.r};\n")
                 elif quad.op == OperatorQuadruple.GOTO:
                     f.write(f"goto {quad.r};\n")
                 elif quad.op in Quadruple.BinaryOp:

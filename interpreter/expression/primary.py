@@ -13,7 +13,7 @@ class Primary(Instruction):
         self.row = row
 
     def firstRun(self, localE):
-        if self.type == 1:
+        if self.type == PrimaryType.IDENTIFIER:
             #it is an identifier, look for it in the symbols table
             sym = localE.findSymbol(self.value)
             if sym != None:

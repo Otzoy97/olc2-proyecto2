@@ -9,11 +9,4 @@ parselog.txt
 /interpreter/__pycache__
 /interpreter/expression/__pycache__
 /interpreter/environment/__pycache__
-AnalizadorDescendente/__pycache__
-ast/__pycache__
-Condicionales/__pycache__
-Primitivas/__pycache__
-Reporteria/__pycache__
-ValorImplicito/__pycache__
-ply/__pycache__
 parsetab.py

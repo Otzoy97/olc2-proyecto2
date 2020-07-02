@@ -22,6 +22,8 @@ reserved = {
     'true': 'TRUE',
     'false': 'FALSE',
     'sizeof': 'SIZEOF',
+    'scanf': 'SCANF',
+    'printf': 'PRINTF',
     'goto' : 'GOTO'
 }
 

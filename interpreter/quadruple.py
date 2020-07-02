@@ -1,35 +1,30 @@
 from enum import Enum
 
 class OperatorQuadruple(Enum):
-    PLUS        = 1  # +
-    MINUS       = 2  # -
-    TIMES       = 3  # *
-    QUOTIENT    = 4  # /
-    REMAINDER   = 5  # %
-    NEGATIVE    = 6  # -
+    PLUS        = "+"  # +
+    MINUS       = "-"  # -
+    TIMES       = "*"  # *
+    QUOTIENT    = "/"  # /
+    REMAINDER   = "%"  # %
+    #NEGATIVE    = 6  # -
     ABS         = 7  # abs
-    NOT         = 8  # !
-    AND         = 9  # &&
-    XOR         = 10 # xor
-    OR          = 11 # ||
-    NOTBW       = 12 # ~ 
-    ANDBW       = 13 # &
-    ORBW        = 14 # |
-    XORBW       = 15 # ^
-    SHL         = 16 # <<
-    SHR         = 17 # >>
-    EQ          = 18 # =
-    NEQ         = 19 # !=
-    GR          = 20 # >
-    GRE         = 21 # >=
-    LS          = 22 # <
-    LSE         = 23 # <=
-    AMP         = 24 # &
-    CINT        = 25 # int
-    CFLOAT      = 26 # float
-    CCHAR       = 27 # string
-    READ        = 28 # read()
-    ARRAY       = 29 # array()
+    NOT         = "!"  # !
+    AND         = "&&"  # &&
+    XOR         = "xor" # xor
+    OR          = "||" # ||
+    NOTBW       = "~" # ~ 
+    ANDBW       = "&" # &
+    ORBW        = "|" # |
+    XORBW       = "^" # ^
+    SHL         = "<<" # <<
+    SHR         = ">>" # >>
+    EQ          = "==" # =
+    NEQ         = "!=" # !=
+    GR          = ">" # >
+    GRE         = ">=" # >=
+    LS          = "<" # <
+    LSE         = "<=" # <=
+    AMP         = "&" # &
     ASSIGNMENT  = 30 # assignment
     LABEL       = 31
     IF          = 32
@@ -44,6 +39,32 @@ class Quadruple():
 
     QDict = []
     IdxLabel = 0
+    BinaryOp = [
+        OperatorQuadruple.PLUS,
+        OperatorQuadruple.MINUS,
+        OperatorQuadruple.TIMES,
+        OperatorQuadruple.QUOTIENT,
+        OperatorQuadruple.REMAINDER,
+        OperatorQuadruple.AND,
+        OperatorQuadruple.XOR,
+        OperatorQuadruple.OR,
+        OperatorQuadruple.ANDBW,
+        OperatorQuadruple.ORBW,
+        OperatorQuadruple.XORBW,
+        OperatorQuadruple.SHL,
+        OperatorQuadruple.SHR,
+        OperatorQuadruple.EQ,
+        OperatorQuadruple.NEQ,
+        OperatorQuadruple.GR,
+        OperatorQuadruple.GRE,
+        OperatorQuadruple.LS,
+        OperatorQuadruple.LSE
+    ]
+    UnaryOp = [
+        OperatorQuadruple.NOTBW,
+        OperatorQuadruple.NOT,
+        OperatorQuadruple.AMP
+    ]
 
     @staticmethod
     def createLabel(lbl = None):
@@ -53,3 +74,22 @@ class Quadruple():
         q = Quadruple(OperatorQuadruple.LABEL, None, None, lbl)
         #Quadruple.QDict.append(q)
         return q   
+
+    @staticmethod
+    def create3DCode():
+        '''this function creates a file with all the instructions
+            stored id QDict'''
+        with open("3DAugus/augus.aug", "w") as f:
+            for quad in Quadruple.QDict:
+                if quad.op == OperatorQuadruple.ASSIGNMENT:
+                    f.write(f"{quad.r} = {quad.arg1};\n")
+                elif quad.op == OperatorQuadruple.LABEL:
+                    f.write(f"{quad.r}:\n")
+                elif quad.op == OperatorQuadruple.IF:
+                    f.write(f"if {quad.arg1} goto {quad.r};\n")
+                elif quad.op == OperatorQuadruple.GOTO:
+                    f.write(f"goto {quad.r};\n")
+                elif quad.op in Quadruple.BinaryOp:
+                    f.write(f"{quad.r} = {quad.arg1} {quad.op.value} {quad.arg2};\n")
+                elif quad.op in Quadruple.UnaryOp:
+                    f.write(f"{quad.r} = {quad.op.value}{quad.arg1};\n")

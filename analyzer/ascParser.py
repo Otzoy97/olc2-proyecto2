@@ -20,6 +20,7 @@ from interpreter.expression.assignment import Assignment
 from interpreter.expression.jump import Jump
 from interpreter.expression.struct import Struct
 from interpreter.declaration import Declaration
+from interpreter.environment.Program import Program
 
 precedence = (
     ('left', 'OR'),
@@ -38,11 +39,12 @@ precedence = (
 
 def p_init_minorCList0(t):
     '''inst_minorCList  :   inst_minorC'''
-    t[0] = [t[1]]
+    t[0] = Program()
+    t[0].ist.append(t[1])
 
 def p_init_minorCList1(t):
     '''inst_minorCList  :   inst_minorCList inst_minorC'''
-    t[1].append(t[2])
+    t[1].ist.append(t[2])
     t[0] = t[1]
 
 def p_empty(t):
@@ -66,6 +68,7 @@ def p_function_def(t):
 def p_declaration0(t):
     '''declaration      :   dec_spec init_dec_list SCOLON'''
     t[2].insert(0, t[1])
+    print(t[2])
     t[0] = t[2]
 
 def p_declaration1(t):
@@ -341,7 +344,7 @@ def p_conditionalExpression0(t):
     t[0] = t[1]
 
 def p_conditionalExpression1(t):
-    '''conditionalExpression : binaryExpressions QUESR expression COLON conditionalExpression'''
+    '''conditionalExpression : binaryExpressions QUESR conditionalExpression COLON conditionalExpression'''
     t[0] = Conditional(t[1], t[3], t[5], t.lexer.lexdata[0: t.lexer.lexpos].count("\n") + 1)
 
 def p_binaryExpression0(t):
@@ -405,22 +408,23 @@ def p_binaryExpression18(t):
     t[0] = t[1]
 
 def p_unaryExpression0(t):
-    '''unaryExpression    :   PARL dec_spec PARR binaryExpressions'''
-    if t[2] == "int":
+    '''unaryExpression    :   PARL dec_spec PARR postfixExpression'''
+    if t[2] == DSpecifier.INTEGER:
         t[0] = Unary(t[4], Operator.CASTINT)
-    elif t[2] == "double" or t[2] == "float":
+    elif t[2] == DSpecifier.FLOATING:
         t[0] = Unary(t[4], Operator.CASTFLOAT)
-    elif t[2] == "char":
+    elif t[2] == DSpecifier.CHARACTER:
         t[0] = Unary(t[4], Operator.CASTCHAR)
+    print(t[4])
 
 def p_unaryExpression1(t):
     '''unaryExpression  :   INC postfixExpression
                         |   DEC postfixExpression
-                        |   ANDBW binaryExpressions %prec POINT
-                        |   PLUS binaryExpressions %prec UPLUS
-                        |   MINUS binaryExpressions %prec UMINUS
-                        |   NOTBW binaryExpressions
-                        |   NOT binaryExpressions'''
+                        |   ANDBW postfixExpression %prec POINT
+                        |   PLUS postfixExpression %prec UPLUS
+                        |   MINUS postfixExpression %prec UMINUS
+                        |   NOTBW postfixExpression
+                        |   NOT postfixExpression'''
     if t[1] == '++':
         t[0] = Unary(t[2], Operator.INCREMENT)
     elif t[1] == '--':
@@ -445,7 +449,7 @@ def p_postExpression0(t):
     t[0] = t[1]
 
 def p_postExpression1(t):
-    '''postfixExpression :  postfixExpression CORL expression CORR'''
+    '''postfixExpression :  postfixExpression CORL assignmentExpression CORR'''
     t[0] = Postfix(t[1], Operator.ARRAYACCESS, t[3])
     
 def p_postExpression2(t):
@@ -474,7 +478,7 @@ def p_fExpression0(t):
     t[0] = t[1]
 
 def p_fExpression1(t):
-    '''primaryExpression :  PARL expression PARR'''
+    '''primaryExpression :  PARL conditionalExpression PARR'''
     #rise value
     t[0] = t[2]
 
@@ -486,6 +490,10 @@ def p_fExpression3(t):
     '''primaryExpression :   STRVAL'''
     t[0] = Primary(t[1], PrimaryType.CONSTANT, t.lexer.lexdata[0: t.lexer.lexpos].count("\n") + 1)
 
+def p_fExpression4(t):
+    '''primaryExpression :  SCANF PARL PARR'''
+    #rise value
+    t[0] = t[1]
 
 def p_assignmentExpressionList0(t):
     '''assignmentExpressionList : assignmentExpression'''

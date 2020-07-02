@@ -22,7 +22,6 @@ class Symbol():
         self.environment = environment
         self.row = row
         self.dimension = []
-        self.struct = []
         self.parlist = []
         self.returnLabel = None
 
@@ -31,7 +30,6 @@ class SymbolTable():
     IdxTempVar = 0
     #Keep track of all variables and functions
     St = {}
-
     def __init__(self):
         '''Init a dict'''
         self.table = {}
@@ -83,7 +81,6 @@ class SymbolTable():
             f.write("<td>Id.</td>\n")
             f.write("<td>Ref</td>\n")
             f.write("<td>Dimensión</td>\n")
-            f.write("<td>Struct</td>\n")
             f.write("<td>Valor</td>\n")
             f.write("<td>Tipo</td>\n")
             f.write("<td>Fila</td>\n")
@@ -94,10 +91,6 @@ class SymbolTable():
                 f.write(f"<td>{k}</td>\n")
                 f.write(f"<td>{v.temp}</td>\n")
                 f.write(f"<td>{v.dimension if len(v.dimension) > 0 else None}</td>\n")
-                f.write(f"<td>")
-                for i in v.struct:
-                    f.write(f"{i}<br>")
-                f.write(f"</td>\n")
                 f.write(f"<td>{v.value}</td>\n")
                 f.write(f"<td>{v.type.name}</td>\n")
                 f.write(f"<td>{v.row}</td>\n")

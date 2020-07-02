@@ -44,3 +44,7 @@ class Operator(Enum):
     ORBWA = 40
     CASTFLOAT = 41
     CASTCHAR = 42
+    CONTINUE_ = 43
+    GOTO = 44
+    RETURN_ = 45
+    BREAK_ = 46

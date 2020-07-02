@@ -35,7 +35,7 @@ class Conditional(Instruction):
         # crea la etiqueta y la instrucción IF
         #
         q2 = Quadruple.createLabel()
-        q1 = Quadruple(OperatorQuadruple.IF,f"!{condName}", "",q2.r)
+        q1 = Quadruple(OperatorQuadruple.IF,f"{condName}", "",q2.r)
         Quadruple.QDict.append(q1)
         val_false = self.exp3.firstRun(localE)
         #
@@ -48,6 +48,7 @@ class Conditional(Instruction):
             q3 = Quadruple(OperatorQuadruple.ASSIGNMENT, val_false[1], None, val_trueName)
             Quadruple.QDict.append(q3)
         elif val_false[0] == "tempname":
-            Quadruple.QDict[-1].r = val_trueName
+            q3 = Quadruple(OperatorQuadruple.ASSIGNMENT, val_false[1], None, val_trueName)
+            Quadruple.QDict.append(q3)
         Quadruple.QDict.append(q2)
         return ("tempname", val_trueName)

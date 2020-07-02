@@ -20,7 +20,7 @@ class Postfix(Instruction):
             expName = exp[1].temp if exp[0] == "symbol" else exp[1]
             return ("tempname", f"{arg1Name}[{expName}]")
         elif self.op == Operator.STRUCTACCESS:
-            return ("tempname", f"{arg1Name}[{self.exp2}]")
+            return ("tempname", f"{arg1Name}[\"{self.exp2}\"]")
         elif self.op == Operator.CALL:
             if arg1[0] !=  "symbol":
                 return ("rawvalue", 0)

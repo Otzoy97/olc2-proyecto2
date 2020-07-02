@@ -4,6 +4,8 @@
 /analyzer/parsetab.py
 *.out
 parselog.txt
+*.txt
+*.html
 /report
 /analyzer/grammar.txt
 /interpreter/__pycache__

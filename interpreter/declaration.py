@@ -15,7 +15,14 @@ class Declaration(Instruction):
         dec_spec = self.exp[0]
         if isinstance(dec_spec, Struct):
             # Es un struct
-            pass
+            #reccore la lista de declaración para obtener valores
+            for struct_dec in self.exp[1:]:
+                sym = Symbol(f"$t{SymbolTable.IdxTempVar}")
+                sym.row = self.row
+                sym.type = SymbolType.STRUCT
+                SymbolTable.IdxTempVar += 1
+                Quadruple.QDict.append(Quadruple(OperatorQuadruple.ASSIGNMENT, "array()", None, sym.temp))
+                localE.sym.add(struct_dec[0], sym)
         else:
             for declarator in self.exp[1:]:
                 self.__sym = Symbol(f"$t{SymbolTable.IdxTempVar}")

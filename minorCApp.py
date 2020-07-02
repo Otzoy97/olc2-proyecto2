@@ -11,6 +11,8 @@ from interpreter.expression.struct import Struct
 from interpreter.st import SymbolTable, Symbol
 from interpreter.quadruple import Quadruple
 
+from Pantalla import Ui_MainWindow
+
 class Ui_augusApp(QtWidgets.QMainWindow):
     
     def __init__(self, parent = None):
@@ -20,11 +22,10 @@ class Ui_augusApp(QtWidgets.QMainWindow):
         # reference to a file
         self.fileRef = ""
         self.fileSaved = False
-        self.sT = None
-        self.ascDebugger = None
+        self.pantalla = None
 
     def setupUi(self):
-        self.setObjectName("augusApp")
+        self.setObjectName("MinorC 0.1")
         self.resize(800, 600)
         icon = QtGui.QIcon()
         icon.addPixmap(QtGui.QPixmap("augus.ico"),QtGui.QIcon.Normal, QtGui.QIcon.Off)
@@ -89,16 +90,9 @@ class Ui_augusApp(QtWidgets.QMainWindow):
 
         self.test = MinorCSyntaxHighligther(self.txtInput.document())
 
-        # -- SALIDA DE CODIGO (CMD)
-        self.txtOutput =  QtWidgets.QPlainTextEdit(self.splitter)
-        self.txtOutput.setMinimumSize(QtCore.QSize(0, 100))
-        font = QtGui.QFont()
-        font.setPointSize(20)
-        self.txtOutput.setFont(font)
-        self.txtOutput.setUndoRedoEnabled(True)
-        self.txtOutput.setObjectName("txtOutput")
         self.gridLayout.addWidget(self.splitter, 0, 0, 1, 1)
         self.setCentralWidget(self.centralwidget)
+        self.splitter.setCollapsible(0, False)
         # -- BARRA DE MENÚ
         self.menubar = QtWidgets.QMenuBar(self)
         self.menubar.setGeometry(QtCore.QRect(0, 0, 962, 26))
@@ -237,23 +231,8 @@ class Ui_augusApp(QtWidgets.QMainWindow):
         self.actionReplace.setText("Replace")
         self.actionReplace.setShortcut("Ctrl+H")
         self.actionAbout.setText("About")
-        #self.actionDark_Mode.setText("Dark Mode")
-        #self.actionAscendent_Debugging.setText("Ascendent Debugging")
-        #self.actionAscendent_Debugging.setShortcut("F5")
-        self.actionAscendent_Without_Debugging.setText("Ascendent Without Debugging")
+        self.actionAscendent_Without_Debugging.setText("Generate 3CA")
         self.actionAscendent_Without_Debugging.setShortcut("Ctrl+F5")
-        #self.actionDescendent_Without_Debugging.setText("Descendent Without Debugging")
-        #self.actionDescendent_Without_Debugging.setShortcut("Ctrl+Alt+F5")
-        #self.actionRestart_Debugging.setText("Restart Debugging")
-        #self.actionRestart_Debugging.setShortcut("Ctrl+Shift+F5")
-        #self.actionStop_Debugging.setText("Stop Debugging")
-        #self.actionStop_Debugging.setShortcut("Shift+F5")
-        #self.actionStep_Into.setText("Step Into")
-        #self.actionStep_Into.setShortcut("F11")
-        #self.actionContinue.setText("Continue")
-        #self.actionContinue.setShortcut("F6")
-        #self.actionShowSymbolTable.setText("Show Symbol Table")
-        #self.actionShowSymbolTable.setShortcut("Ctrl+T")
         self.actionGo_To.setText("Go To")
         self.actionGo_To.setShortcut("Ctrl+G")
         # -- File menu actions
@@ -265,15 +244,10 @@ class Ui_augusApp(QtWidgets.QMainWindow):
         # -- Edit menu actions
         self.actionGo_To.triggered.connect(self.goTo_action)
         # -- Run menu actions
-        #self.actionAscendent_Debugging.triggered.connect(self.ascendentDebug_action)
         self.actionAscendent_Without_Debugging.triggered.connect(self.ascendentRun_action)
-        #self.actionDescendent_Without_Debugging.triggered.connect(self.descendentRun_action)
-
-        #self.actionStop_Debugging.triggered.connect(self.stopDebug_action)
-        #self.actionContinue.triggered.connect(self.continue_action)
-        #self.actionRestart_Debugging.triggered.connect(self.restartDebug_action)
-        #self.actionStep_Into.triggered.connect(self.stepInto_action)
-        #self.actionShowSymbolTable.triggered.connect(self.showSymbolTable_action)
+        # -- other actions
+        self.actionReplace.setEnabled(False)
+        self.actionAbout.triggered.connect(self.about_action)
     
     def newFile_action(self):
         """Checks reference of actual file being edited. If it's saved then just clear the input text, if it isn't saveFile is called"""
@@ -408,6 +382,8 @@ class Ui_augusApp(QtWidgets.QMainWindow):
                     print(f"{k}->(temp: {v.temp}, dimension: {v.dimension}, struct: {v.struct}, value: {v.value})")
                 for q in Quadruple.QDict:
                     print(f"{q.r} <-> {q.arg1} {q.op} {q.arg2}")
+            p = Quadruple.create3DCode()
+            self.pantalla = Ui_MainWindow()
         except Exception as e:
             print("es gg ->", str(e))
         finally:
@@ -443,6 +419,18 @@ class Ui_augusApp(QtWidgets.QMainWindow):
             elif msg == QtWidgets.QMessageBox.Cancel:
                 event.ignore()
     
+    def about_action(self):
+        QtWidgets.QMessageBox.information(
+            self, "About",
+            "Universidad de San Carlos de Guatemala\n" +
+            "Facultad de Ingeniería\n"+
+            "Escuela de Ciencias y Sistemas\n"+
+            "Compiladores 2\n2do Semestre - 2020\n"+
+            "────────────────────────\n"+
+            "201602782\nSergio Fernando Otzoy Gonzalez",
+            QtWidgets.QMessageBox.Ok
+        )
+
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
     u = Ui_augusApp()

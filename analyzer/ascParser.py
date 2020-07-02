@@ -68,8 +68,8 @@ def p_function_def(t):
 def p_declaration0(t):
     '''declaration      :   dec_spec init_dec_list SCOLON'''
     t[2].insert(0, t[1])
-    print(t[2])
     t[0] = t[2]
+    print(t[0])
 
 def p_declaration1(t):
     '''declaration      :   dec_spec SCOLON'''
@@ -93,6 +93,7 @@ def p_dec_spec(t):
     elif str(t[1]) == "float":
         t[0] = DSpecifier.FLOATING
     else:
+        print(f"{t[1].id}->{t[1].dec}")
         t[0] = t[1]
 
 def p_struct_spec0(t):
@@ -133,17 +134,18 @@ def p_init_declarator1(t):
 
 def p_struct_dec(t):
     '''struct_dec       :    dec_spec struct_decr_list SCOLON'''
+    t[0] = []
     for i in t[2]:
-        i.insert(0,t[1])
-    t[0] =  t[2]
+        t[0].append(i)
+    print(t[0])
 
 def p_struct_decr_list0(t):
     '''struct_decr_list :   declarator'''
-    t[0] = [t[1]]
+    t[0] = [t[1][0]]
 
 def p_struct_decr_list1(t):
     '''struct_decr_list :   struct_decr_list COMMA declarator'''
-    t[1].append(t[3])
+    t[1].append(t[3][0])
     t[0] = t[1]
 
 def p_declarationLst(t):

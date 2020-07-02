@@ -29,6 +29,7 @@ class OperatorQuadruple(Enum):
     LABEL       = 31
     IF          = 32
     GOTO        = 33
+    PRINT       = 34
     
 class Quadruple():
     def __init__(self, op, arg1, arg2, r):
@@ -98,6 +99,8 @@ class Quadruple():
                     f.write(f"if ({quad.arg1}) goto {quad.r};\n")
                 elif quad.op == OperatorQuadruple.GOTO:
                     f.write(f"goto {quad.arg1};\n")
+                elif quad.op == OperatorQuadruple.PRINT:
+                    f.write(f"print({quad.arg1});\n")
                 elif quad.op in Quadruple.BinaryOp:
                     f.write(f"{quad.r} = {quad.arg1} {quad.op.value} {quad.arg2};\n")
                 elif quad.op in Quadruple.UnaryOp:

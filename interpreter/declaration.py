@@ -9,7 +9,7 @@ class Declaration(Instruction):
         self.exp = exp
         self.row = row
 
-    def firstRun(self, localE):
+    def firstRun(self, localE, parent):
         '''Ejecuta la primera pasada recuperando los
         valores de asignación y nombre'''
         dec_spec = self.exp[0]
@@ -18,6 +18,7 @@ class Declaration(Instruction):
             #reccore la lista de declaración para obtener valores
             for struct_dec in self.exp[1:]:
                 sym = Symbol(f"$t{SymbolTable.IdxTempVar}")
+                sym.environment = parent.retrieveEnvironment()
                 sym.row = self.row
                 sym.type = SymbolType.STRUCT
                 SymbolTable.IdxTempVar += 1
@@ -28,6 +29,7 @@ class Declaration(Instruction):
                 self.__sym = Symbol(f"$t{SymbolTable.IdxTempVar}")
                 self.__sym.row = self.row
                 self.__sym.type = SymbolType.VARIABLE
+                self.__sym.environment = parent.retrieveEnvironment()
                 SymbolTable.IdxTempVar += 1
                 # Es otro tipo
                 self.id_ = declarator[0]
@@ -39,7 +41,7 @@ class Declaration(Instruction):
                     self.values = [] #almacenará los valores del arreglo
                     q0 = Quadruple(OperatorQuadruple.ASSIGNMENT, "array()", None, self.__sym.temp)
                     for assig_dim in dimension_:
-                        res = assig_dim.firstRun(localE)
+                        res = assig_dim.firstRun(localE, parent)
                         #almacena las dimensiones
                         self.__sym.dimension.append(res[1]) 
                     if len(declarator) == 2:
@@ -49,14 +51,14 @@ class Declaration(Instruction):
                         if isinstance(value_, list):
                             Quadruple.QDict.append(q0)
                             for values_dim in value_:
-                                res = values_dim.firstRun(localE)
+                                res = values_dim.firstRun(localE, parent)
                                 resName = res[1].temp if res[0] == "symbol" else res[1]
                                 self.values.append(resName)
                             self.linealizar(self.__sym.dimension, 0, "")
                         else:
                             #es un valor plano
                             self.__sym.type = SymbolType.VARIABLE
-                            valueSolve = declarator[2].firstRun(localE)
+                            valueSolve = declarator[2].firstRun(localE, parent)
                             nameValueSolve = valueSolve[1].temp if valueSolve[0] == "symbol" else valueSolve[1]
                             self.__sym.value = nameValueSolve
                             Quadruple.QDict.append(Quadruple(OperatorQuadruple.ASSIGNMENT, nameValueSolve, None, self.__sym.temp))                        
@@ -67,7 +69,7 @@ class Declaration(Instruction):
                     Quadruple.QDict.append(Quadruple(OperatorQuadruple.ASSIGNMENT, 0, None, self.__sym.temp))
                 else:
                     #es un valor plano
-                    valueSolve = declarator[2].firstRun(localE)
+                    valueSolve = declarator[2].firstRun(localE, parent)
                     nameValueSolve = valueSolve[1].temp if valueSolve[0] == "symbol" else valueSolve[1]
                     self.__sym.value = nameValueSolve
                     Quadruple.QDict.append(Quadruple(OperatorQuadruple.ASSIGNMENT, nameValueSolve, None, self.__sym.temp))

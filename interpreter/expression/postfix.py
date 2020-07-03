@@ -12,11 +12,11 @@ class Postfix(Instruction):
         self.exp2 = exp2
         self.access = []
 
-    def firstRun(self, localE, parent):
-        arg1 = self.exp1.firstRun(localE, parent)
+    def firstRun(self, localE):
+        arg1 = self.exp1.firstRun(localE)
         arg1Name = arg1[1].temp if arg1[0] == "symbol" else arg1[1]
         if self.op == Operator.ARRAYACCESS:
-            exp = self.exp2.firstRun(localE, parent)
+            exp = self.exp2.firstRun(localE)
             expName = exp[1].temp if exp[0] == "symbol" else exp[1]
             return ("tempname", f"{arg1Name}[{expName}]")
         elif self.op == Operator.STRUCTACCESS:
@@ -27,7 +27,7 @@ class Postfix(Instruction):
             self.noParam = 1
             for param in self.exp2:
                 self.noParam += 1
-                p = param.firstRun(localE, parent)
+                p = param.firstRun(localE)
                 pName = p[1].temp if p[0] == "symbol" else p[1]
                 Quadruple.QDict.append(Quadruple(OperatorQuadruple.PLUS, "$sp", 1, "$sp"))
                 Quadruple.QDict.append(Quadruple(OperatorQuadruple.ASSIGNMENT, pName, None, "$s0[$sp]"))

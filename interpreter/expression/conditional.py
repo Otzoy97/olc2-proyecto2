@@ -9,10 +9,10 @@ class Conditional(Instruction):
         self.exp3 = exp3 #val_false
         self.row = row
 
-    def firstRun(self, localE, parent):
+    def firstRun(self, localE):
         #solve condition
-        cond = self.exp1.firstRun(localE, parent)
-        val_true = self.exp2.firstRun(localE, parent)
+        cond = self.exp1.firstRun(localE)
+        val_true = self.exp2.firstRun(localE)
         ## $tn = val_true
         ## if !cond goto Ln
         ## $tn = val_false
@@ -37,7 +37,7 @@ class Conditional(Instruction):
         q2 = Quadruple.createLabel()
         q1 = Quadruple(OperatorQuadruple.IF,f"{condName}", "",q2.r)
         Quadruple.QDict.append(q1)
-        val_false = self.exp3.firstRun(localE, parent)
+        val_false = self.exp3.firstRun(localE)
         #
         # verifica tipos
         #

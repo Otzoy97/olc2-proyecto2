@@ -8,11 +8,21 @@ class Jump(Instruction):
         self.exp = exp
         self.op = op
 
-    def firstRun(self, localE, parent):
+    def firstRun(self, localE):
         if self.op == Operator.CONTINUE_:
-            pass
+            #busca por un entorno padre que sea loop
+            ret = localE.searchForLoop()
+            if ret != None:
+                #inserta una etiqueta goto
+                Quadruple.QDict.append(Quadruple(OperatorQuadruple.GOTO, ret[0], None, None))
+            return ("rawvalue", 0)
         elif self.op == Operator.BREAK_:
-            pass
+            #busca por un entorno padre que sea loop
+            ret = localE.searchForLoop()
+            if ret != None:
+                #inserta una etiqueta goto
+                Quadruple.QDict.append(Quadruple(OperatorQuadruple.GOTO, ret[1], None, None))
+            return ("rawvalue", 0)
         elif self.op == Operator.RETURN_:
             if self.exp == None:
                 Quadruple.QDict.append(Quadruple(OperatorQuadruple.GOTO, f"ret0", None, None))
@@ -20,7 +30,7 @@ class Jump(Instruction):
                 expName = self.exp.firstRun(localE)
                 expName = expName[1].temp if expName[0] == "symbol"  else expName[1]
                 Quadruple.QDict.append(Quadruple(OperatorQuadruple.ASSIGNMENT, expName, None, "$v0"))
-                return ("rawvalue", 0)
+            return ("rawvalue", 0)
         elif self.op == Operator.GOTO:
             Quadruple.QDict.append(Quadruple(OperatorQuadruple.GOTO, self.exp, None, None ))
             return ("rawvalue", 0)

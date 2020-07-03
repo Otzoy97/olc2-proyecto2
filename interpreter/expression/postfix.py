@@ -25,12 +25,13 @@ class Postfix(Instruction):
             if arg1[0] !=  "symbol":
                 return ("rawvalue", 0)
             self.noParam = 1
-            for param in self.exp2:
-                self.noParam += 1
-                p = param.firstRun(localE)
-                pName = p[1].temp if p[0] == "symbol" else p[1]
-                Quadruple.QDict.append(Quadruple(OperatorQuadruple.PLUS, "$sp", 1, "$sp"))
-                Quadruple.QDict.append(Quadruple(OperatorQuadruple.ASSIGNMENT, pName, None, "$s0[$sp]"))
+            if self.exp2 != None:
+                for param in self.exp2:
+                    self.noParam += 1
+                    p = param.firstRun(localE)
+                    pName = p[1].temp if p[0] == "symbol" else p[1]
+                    Quadruple.QDict.append(Quadruple(OperatorQuadruple.PLUS, "$sp", 1, "$sp"))
+                    Quadruple.QDict.append(Quadruple(OperatorQuadruple.ASSIGNMENT, pName, None, "$s0[$sp]"))
             Quadruple.QDict.append(Quadruple(OperatorQuadruple.PLUS, "$sp", 1, "$sp"))
             retlbl = Quadruple.addReturnLabel()
             Quadruple.QDict.append(Quadruple(OperatorQuadruple.ASSIGNMENT, retlbl, None, "$s0[$sp]"))

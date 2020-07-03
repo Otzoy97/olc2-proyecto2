@@ -30,6 +30,7 @@ class OperatorQuadruple(Enum):
     IF          = 32
     GOTO        = 33
     PRINT       = 34
+    EXIT_       = 35
     
 class Quadruple():
     def __init__(self, op, arg1, arg2, r):
@@ -86,6 +87,22 @@ class Quadruple():
         return q   
 
     @staticmethod
+    def appendReturnLabels():
+        '''esta función recupera los cuadruplos almacenados en
+        QReturn y los añade a QDict'''
+        #primero inserta una etiqueta
+        Quadruple.QDict.append(Quadruple(OperatorQuadruple.LABEL,None, None, "ret0"))
+        #añade un cuadruplo de comodín
+        Quadruple.IdxReturn += 1
+        Quadruple.QDict.append(Quadruple(OperatorQuadruple.IF, "$sp < 0", None, f"ret{Quadruple.IdxReturn}"))
+        #añade los cuadruplos
+        Quadruple.QDict.extend(Quadruple.QReturn)
+        #añade la etiqueta del cuadruplo de comodín
+        Quadruple.QDict.append(Quadruple(OperatorQuadruple.LABEL, None, None,f"ret{Quadruple.IdxReturn}" ))
+        Quadruple.QDict.append(Quadruple(OperatorQuadruple.EXIT_, None, None, None))
+
+
+    @staticmethod
     def create3DCode():
         '''this function creates a file with all the instructions
             stored id QDict'''
@@ -101,6 +118,8 @@ class Quadruple():
                     f.write(f"goto {quad.arg1};\n")
                 elif quad.op == OperatorQuadruple.PRINT:
                     f.write(f"print({quad.arg1});\n")
+                elif quad.op == OperatorQuadruple.EXIT_:
+                    f.write(f"exit;\n")
                 elif quad.op in Quadruple.BinaryOp:
                     f.write(f"{quad.r} = {quad.arg1} {quad.op.value} {quad.arg2};\n")
                 elif quad.op in Quadruple.UnaryOp:

@@ -34,6 +34,8 @@ class Function(Instruction):
             counterParams += 1
             #agrega el symbolo a la tabla de simbolos locales
             self.sym.add(param, s)
+        #añade la etiqueta de la función
+        Quadruple.QDict.append(Quadruple(OperatorQuadruple.LABEL, None, None, functionId))
         #ejecuta los statements
         for sta in self.csta:
             sta.firstRun(self)

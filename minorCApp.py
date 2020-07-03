@@ -21,7 +21,7 @@ class Ui_augusApp(QtWidgets.QMainWindow):
         self.show()
         # reference to a file
         self.fileRef = ""
-        self.fileSaved = False
+        self.fileSaved = True
         self.pantalla = None
 
     def setupUi(self):
@@ -168,7 +168,7 @@ class Ui_augusApp(QtWidgets.QMainWindow):
         self.setWindowTitle("Augus 0.1 - fileName")
         self.lblCol.setText("Column")
         self.lblRow.setText("Row")
-        self.lblStatus.setText("Not Saved")
+        self.lblStatus.setText("Ready")
         self.menuFile.setTitle("File")
         self.menuEdit.setTitle("Edit")
         self.menuRun.setTitle("Run")
@@ -347,7 +347,7 @@ class Ui_augusApp(QtWidgets.QMainWindow):
             if t != None:
                 t.firstRun()
                 for k,v in SymbolTable.St.items():
-                    print(f"{k}->(temp: {v.temp}, dimension: {v.dimension}, struct: {v.struct}, value: {v.value})")
+                    print(f"{k}->(temp: {v.temp}, dimension: {v.dimension}, value: {v.value})")
                 for q in Quadruple.QDict:
                     print(f"{q.r} <-> {q.arg1} {q.op} {q.arg2}")
             p = Quadruple.create3DCode()

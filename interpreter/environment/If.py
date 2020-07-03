@@ -12,7 +12,7 @@ class If(Instruction):
         else:
             self.statement = statement
         if else_statement != None:
-            if not isinstance(statement, list):
+            if not isinstance(else_statement, list):
                 self.else_statement = [else_statement]
             else:
                 self.else_statement = else_statement
@@ -29,9 +29,15 @@ class If(Instruction):
         Quadruple.QDict.append(Quadruple(OperatorQuadruple.IF, f"!{expname}", None, qlabel.r))
         for sta in self.statement:
             sta.firstRun(localE)
-        Quadruple.QDict.append(qlabel)
-        for sta in self.else_statement:
-            sta.firstRun(localE)
+        if len(self.else_statement) > 0:  
+            qlabelIfTrue = Quadruple.createLabel()
+            Quadruple.QDict.append(Quadruple(OperatorQuadruple.GOTO, qlabelIfTrue.r, None, None))
+            Quadruple.QDict.append(qlabel)
+            for sta in self.else_statement:
+                sta.firstRun(localE)
+            Quadruple.QDict.append(qlabelIfTrue)
+        else:
+            Quadruple.QDict.append(qlabel)
             
     def findSymbol(self, identifier):
         '''Busca un simbolo'''

@@ -198,7 +198,7 @@ def p_par_list1(t):
 
 def p_par_dec(t):
     '''par_dec          :   dec_spec declarator'''
-    t[0] = (t[0], t[1])
+    t[0] = t[2][0]
 
 def p_init0(t):
     '''init             :   assignmentExpression'''

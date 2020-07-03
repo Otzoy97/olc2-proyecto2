@@ -8,3 +8,19 @@ class Case(Instruction):
         self.row = row
         self.parent = parent
         self.sym = SymbolTable()
+
+    def firstRun(self, localE):
+        pass
+
+    def findSymbol(self, identifier):
+        '''Busca un simbolo'''
+        r = self.sym.find(identifier)
+        if r == None:
+            r = self.parent.findSymbol(identifier)
+        return r
+
+    def retrieveEnvironment(self):
+        return self.parent.retrieveEnvironment()
+
+    def searchForLoop(self):
+        return self.parent.searchForLoop()

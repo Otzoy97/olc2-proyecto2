@@ -15,3 +15,9 @@ class Program(Instruction):
     def findSymbol(self, identifier):
         '''Busca un simbolo'''
         return self.sym.find(identifier)
+
+    def retrieveEnvironment(self):
+        return "main/global"
+
+    def searchForLoop(self):
+        return None

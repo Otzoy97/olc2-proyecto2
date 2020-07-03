@@ -35,7 +35,7 @@ class Postfix(Instruction):
             retlbl = Quadruple.addReturnLabel()
             Quadruple.QDict.append(Quadruple(OperatorQuadruple.ASSIGNMENT, retlbl, None, "$s0[$sp]"))
             Quadruple.QDict.append(Quadruple(OperatorQuadruple.GOTO, arg1Name, None, None))
-            Quadruple.QDict.append(Quadruple(OperatorQuadruple.LABEL, f"ret{retlbl}", None, None))
+            Quadruple.QDict.append(Quadruple(OperatorQuadruple.LABEL, None, None, f"ret{retlbl}"))
             Quadruple.QDict.append(Quadruple(OperatorQuadruple.MINUS, "$sp", self.noParam, "$sp"))
             return ("tempname", "$v0")
         elif self.op == Operator.INCREMENT:

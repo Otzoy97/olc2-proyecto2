@@ -21,6 +21,14 @@ from interpreter.expression.jump import Jump
 from interpreter.expression.struct import Struct
 from interpreter.declaration import Declaration
 from interpreter.environment.Program import Program
+from interpreter.environment.For import For
+from interpreter.environment.Do import Do
+from interpreter.environment.While import While
+from interpreter.environment.Function import Function
+from interpreter.environment.If import If
+from interpreter.environment.Switch import Switch, Label, Case
+from interpreter.environment.While import While
+from interpreter.expression.printf import Printf
 
 precedence = (
     ('left', 'OR'),
@@ -211,78 +219,120 @@ def p_init_list1(t):
         t[1].append(t[3])
     t[0] = t[1]
 
-def p_statement(t):
+def p_statement0(t):
     '''statement        :   exp_statement
                         |   compound_statement
                         |   sel_statement
                         |   lop_statement
                         |   jmp_statement
                         |   declaration
-                        |   switch_statement
-    '''
-    pass
+                        |   switch_statement'''
+    t[0] = t[1]
+
+def p_statement1(t):
+    '''statement        :   PRINTF PARL expression PARR'''
+    t[0] = Printf(t[3])
 
 def p_switch_statement(t):
     '''switch_statement :   CASE constantExpression COLON statement
                         |   DEFAULT COLON statement
                         |   ID COLON statement
     '''
-    pass
+    if t[1] == "case":
+        t[0] = Case(t[2], t[4])
+    elif t[1] == "default":
+        t[0] = Case(None, t[4])
+    else:
+        t[0] = Label(t[1], t[3])
 
 def p_exp_statement0(t):
-    '''exp_statement    :   expression SCOLON'''
-    pass
+    '''exp_statement    :   assignmentExpression SCOLON'''
+    t[0] = t[1]
 
 def p_exp_statement1(t):
     '''exp_statement    :   SCOLON'''
-    pass
+    t[0] = []
 
-def p_compound_statement(t):
+def p_compound_statement0(t):
     '''compound_statement :  LLVL statement_list LLVR
-                        |   LLVL LLVR
     '''
-    pass
+    t[0] = t[2]
 
-def p_statement_list(t):
-    '''statement_list   :   statement
-                        |   statement_list statement
+def p_compound_statement1(t):
+    '''compound_statement :  LLVL LLVR
     '''
-    pass
+    t[0] = []
+
+def p_statement_list0(t):
+    '''statement_list   :   statement'''
+    if isinstance(t[1], list):
+        t[0] = t[1]
+    else:
+        t[0] = [t[1]]
+
+def p_statement_list1(t):
+    '''statement_list   :   statement_list statement'''
+    if isinstance(t[2], list):
+        for i in t[2]:
+            t[1].append(i)
+    else:
+        t[1].append(t[2])
+    t[0] = t[1]
 
 def p_sel_statement(t):
-    '''sel_statement    :   IF PARL expression PARR statement else_statement
-                        |   SWITCH PARL expression PARR statement
+    '''sel_statement    :   IF PARL assignmentExpression PARR statement else_statement
+                        |   SWITCH PARL assignmentExpression PARR statement
     '''
-    pass
+    if t[1] == 'if':
+        t[0] = If(t[3],t[5],t[6])
+    elif t[1] == 'switch':
+        t[0] = Switch(t[3],t[5])
 
-def p_else_statement(t):
-    '''else_statement   :   ELSE statement
-                        |   empty
+def p_else_statement0(t):
+    '''else_statement   :   ELSE statement'''
+    t[0] = t[2]
+
+def p_else_statement1(t):
+    '''else_statement   :   empty
     '''
-    pass
+    t[0] = None
 
 def p_lop_statement(t):
-    '''lop_statement    :   WHILE PARL expression PARR statement
-                        |   DO statement WHILE PARL expression PARR SCOLON
-                        |   FOR PARL for_dec_exp SCOLON expression SCOLON expression PARR statement
+    '''lop_statement    :   WHILE PARL assignmentExpression PARR statement
+                        |   DO statement WHILE PARL assignmentExpression PARR SCOLON
+                        |   FOR PARL for_dec_exp SCOLON assignmentExpression SCOLON assignmentExpression PARR statement
     '''
-    pass
+    if t[1] == "while":
+        t[0] = While(t[3], t[5])
+    elif t[1] == "do":
+        t[0] = Do(t[5],t[2])
+    elif t[1] == "for":
+        t[0] = For(t[3], t[5], t[7], t[8])
 
-def p_for_dec_exp(t):
-    '''for_dec_exp      :   expression
-                        |   dec_spec expression
-    '''
-    pass
+def p_for_dec_exp0(t):
+    '''for_dec_exp      :   assignmentExpression'''
+    t[0] = t[1]
 
+def p_for_dec_exp1(t):
+    '''for_dec_exp      :   dec_spec init_dec_list'''
+    t[2].insert(0, t[1])
+    t[0] = Declaration(t[2], t.lexer.lexdata[0: t.lexer.lexpos].count("\n") + 1)
 
 def p_jmp_statement(t):
     '''jmp_statement    :   CONTINUE SCOLON
                         |   BREAK SCOLON
-                        |   RETURN expression SCOLON
+                        |   RETURN assignmentExpression SCOLON
                         |   RETURN SCOLON
                         |   GOTO ID SCOLON
     '''
-    pass
+    if t[1] == "continue":
+        t[0] = Jump(Operator.CONTINUE_, None)
+    elif t[1] == "break":
+        t[0] = Jump(Operator.BREAK_, None)
+    elif t[1] == "return":
+        t[0] = Jump(Operator.RETURN_, None if t[2] == ";" else t[2])
+    elif t[1] == "goto":
+        t[0] = Jump(Operator.GOTO, t[2])
 
 def p_expression0(t):
     '''expression       :   assignmentExpression'''
@@ -336,7 +386,6 @@ def p_assignmentOperator(t):
     elif t[1] == '|=':
         t[0] = Operator.ORBWA
 
-#FIXME: ver si el orden de estas cosas es el correcto
 def p_constantExpression(t):
     '''constantExpression :  conditionalExpression '''
     t[0] = t[1]
@@ -417,7 +466,6 @@ def p_unaryExpression0(t):
         t[0] = Unary(t[4], Operator.CASTFLOAT)
     elif t[2] == DSpecifier.CHARACTER:
         t[0] = Unary(t[4], Operator.CASTCHAR)
-    print(t[4])
 
 def p_unaryExpression1(t):
     '''unaryExpression  :   INC postfixExpression
@@ -495,7 +543,7 @@ def p_fExpression3(t):
 def p_fExpression4(t):
     '''primaryExpression :  SCANF PARL PARR'''
     #rise value
-    t[0] = t[1]
+    t[0] = Primary(f"read()", PrimaryType.CONSTANT, t.lexer.lexdata[0: t.lexer.lexpos].count("\n") + 1)
 
 def p_assignmentExpressionList0(t):
     '''assignmentExpressionList : assignmentExpression'''

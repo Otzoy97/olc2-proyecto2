@@ -22,7 +22,6 @@ class Symbol():
         self.row = row
         self.dimension = []
         self.parlist = []
-        self.returnLabel = None
         self.param = False
         self.idxParam = 0
 
@@ -59,11 +58,6 @@ class SymbolTable():
             symC = deepcopy(sym)
             #add the symbol to global symbol table
             SymbolTable.St[name] = symC
-            #increase idx
-            SymbolTable.IdxTempVar += 1
-            #set return label
-            q = Quadruple.createLabel(name)
-            sym.returnLabel = q.r
 
     def find(self, name):
         '''find a symbol'''
@@ -85,6 +79,7 @@ class SymbolTable():
             f.write("<td>Id.</td>\n")
             f.write("<td>Ref</td>\n")
             f.write("<td>Dimensión</td>\n")
+            f.write("<td>Parametros</td>\n")
             f.write("<td>Valor</td>\n")
             f.write("<td>Tipo</td>\n")
             f.write("<td>Fila</td>\n")
@@ -95,6 +90,7 @@ class SymbolTable():
                 f.write(f"<td>{k}</td>\n")
                 f.write(f"<td>{v.temp}</td>\n")
                 f.write(f"<td>{v.dimension if len(v.dimension) > 0 else None}</td>\n")
+                f.write(f"<td>{v.parlist if len(v.parlist) > 0 else None}</td>\n")
                 f.write(f"<td>{v.value}</td>\n")
                 f.write(f"<td>{v.type.name}</td>\n")
                 f.write(f"<td>{v.row}</td>\n")

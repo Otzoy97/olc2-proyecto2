@@ -17,7 +17,7 @@ class Program(Instruction):
         return self.sym.find(identifier)
 
     def retrieveEnvironment(self):
-        return "main/global"
+        return "global"
 
     def searchForLoop(self):
         return None

@@ -1,5 +1,5 @@
 from interpreter.instruction import Instruction
-from interpreter.st import SymbolTable, Symbol, SymbolType
+from interpreter.st import SymbolTable, Symbol
 from interpreter.quadruple import Quadruple, OperatorQuadruple
 from interpreter.st import SymbolTable, Symbol
 

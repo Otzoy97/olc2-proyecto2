@@ -44,4 +44,4 @@ def addContentToDot(dotObj,content,reportName):
     lblStr += "<tr><td colspan='2'>"+fstr+"</td> </tr>"
     lblStr += "</table>>"
     dotObj.node("d1",lblStr)
-    dotObj.render(reportName,'report',False,True,'pdf')
+    dotObj.render(reportName,'',False,True,'pdf')

@@ -1,6 +1,6 @@
 from enum import Enum
 from copy import copy, deepcopy
-from interpreter.quadruple import Quadruple
+from interpreter.quadruple import Quadruple, OperatorQuadruple
 
 class SymbolType(Enum):
     FUNCTION = 0
@@ -23,6 +23,8 @@ class Symbol():
         self.dimension = []
         self.parlist = []
         self.returnLabel = None
+        self.param = False
+        self.idxParam = 0
 
 class SymbolTable():
     #Keep track of the index for temporal variables
@@ -66,7 +68,10 @@ class SymbolTable():
     def find(self, name):
         '''find a symbol'''
         if name in self.table:
-            return self.table[name]
+            r =  self.table[name]
+            if r.param:
+                Quadruple.QDict.append(Quadruple(OperatorQuadruple.MINUS,"$sp", r.idxParam,"$ra"))
+            return r
         return None
 
     @staticmethod

@@ -6,8 +6,11 @@ from interpreter.st import SymbolTable, Symbol
 class While(Instruction):
     def __init__(self, expression, statement):
         self.expression = expression
-        self.statement = statement
-        self.parent = parent
+        if not isinstance(statement, list):
+            self.statement = [statement]
+        else:
+            self.statement = statement
+        self.parent = None
         self.sym = SymbolTable()
         self.EndLabel = ""
         self.StartLabel = ""

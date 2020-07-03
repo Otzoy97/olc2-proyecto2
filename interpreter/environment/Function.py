@@ -20,7 +20,7 @@ class Function(Instruction):
         #guarda el sybolo en la tabla padre
         func = Symbol(functionId, None, SymbolType.FUNCTION, self.parent.retrieveEnvironment(),self.row)
         func.parlist = self.dec[1]
-        self.parent.sym.addFunction()
+        self.parent.sym.addFunction(functionId, func)
         #almacena el número de parametros
         noParams = len(self.dec[1])
         counterParams = 0

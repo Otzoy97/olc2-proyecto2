@@ -7,7 +7,10 @@ class Do(Instruction):
     def __init__(self, expression, statement):
         self.sym = SymbolTable()
         self.expression = expression
-        self.statement = statement
+        if not isinstance(statement, list):
+            self.statement = [statement]
+        else:
+            self.statement = statement
         self.parent = None
         self.EndLabel = ""
         self.StartLabel = ""

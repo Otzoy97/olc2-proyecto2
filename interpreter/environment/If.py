@@ -7,7 +7,17 @@ class If(Instruction):
     def __init__(self, expression, statement, else_statement):
         self.expression = expression
         self.statement = statement
-        self.else_statement = statement
+        if not isinstance(statement, list):
+            self.statement = [statement]
+        else:
+            self.statement = statement
+        if else_statement != None:
+            if not isinstance(statement, list):
+                self.else_statement = [else_statement]
+            else:
+                self.else_statement = else_statement
+        else:
+            self.else_statement = []
         self.parent = None
         self.sym = SymbolTable()
 

@@ -31,7 +31,10 @@ class Switch(Instruction):
 class Label(Instruction):
     def __init__(self, identifier, statement):
         self.identifier = identifier
-        self.statement = statement
+        if not isinstance(statement, list):
+            self.statement = [statement]
+        else:
+            self.statement = statement
         self.parent = None
         self.sym = SymbolTable()
 

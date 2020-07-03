@@ -8,7 +8,10 @@ class For(Instruction):
         self.expressionInit = expressionInit
         self.condition = condition
         self.increment = increment
-        self.statement = statement
+        if not isinstance(statement, list):
+            self.statement = [statement]
+        else:
+            self.statement = statement
         self.parent = None
         self.EndLabel = ""
         self.StartLabel = ""

@@ -4,7 +4,7 @@ from interpreter.quadruple import Quadruple, OperatorQuadruple
 from interpreter.st import SymbolTable, Symbol
 
 class While(Instruction):
-    def __init__(self, expression, statement, parent):
+    def __init__(self, expression, statement):
         self.expression = expression
         self.statement = statement
         self.parent = parent

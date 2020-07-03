@@ -227,9 +227,12 @@ def p_statement0(t):
                         |   sel_statement
                         |   lop_statement
                         |   jmp_statement
-                        |   declaration
                         |   switch_statement'''
     t[0] = t[1]
+
+def p_statement2(t):
+    '''statement        :   declaration'''
+    t[0] = Declaration(t[1], t.lexer.lexdata[0: t.lexer.lexpos].count("\n") + 1)
 
 def p_statement1(t):
     '''statement        :   PRINTF PARL expression PARR SCOLON'''

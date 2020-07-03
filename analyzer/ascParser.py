@@ -61,17 +61,19 @@ def p_empty(t):
 
 def p_init_minorC0(t):
     '''inst_minorC      :   function_def'''
-    pass
+    t[0] = t[1]
 
 def p_init_minorC1(t):
     '''inst_minorC      :   declaration'''
     t[0] = Declaration(t[1], t.lexer.lexdata[0: t.lexer.lexpos].count("\n") + 1)
 
-def p_function_def(t):
-    '''function_def     :   dec_spec declarator compound_statement
-                        |   declarator compound_statement
-    '''
-    pass
+def p_function_def0(t):
+    '''function_def     :   dec_spec declarator compound_statement'''
+    t[0] = Function(t[1], t[2], t[3], t.lexer.lexdata[0: t.lexer.lexpos].count("\n") + 1)
+
+def p_function_def1(t):
+    '''function_def     :   declarator compound_statement'''
+    t[0] = Function(None, t[1], t[2], t.lexer.lexdata[0: t.lexer.lexpos].count("\n") + 1)
 
 def p_declaration0(t):
     '''declaration      :   dec_spec init_dec_list SCOLON'''
@@ -230,7 +232,7 @@ def p_statement0(t):
     t[0] = t[1]
 
 def p_statement1(t):
-    '''statement        :   PRINTF PARL expression PARR'''
+    '''statement        :   PRINTF PARL expression PARR SCOLON'''
     t[0] = Printf(t[3])
 
 def p_switch_statement(t):
@@ -494,6 +496,28 @@ def p_unaryExpression2(t):
     '''unaryExpression    :   postfixExpression'''
     t[0] =  t[1]
 
+def p_unaryExpression3(t):
+    '''unaryExpression    :   SIZEOF PARL sizeof_spec PARR'''
+    t[0] = Primary(t[1], PrimaryType.CONSTANT, t.lexer.lexdata[0: t.lexer.lexpos].count("\n") + 1)
+
+def p_sizeof0(t):
+    '''sizeof_spec : INT 
+    | FLOAT
+    | DOUBLE
+    | CHAR
+    | constant'''
+    if t[0] == "int" or t[0] == "float" or t[0] == "double":
+        t[0] = 4
+    elif t[0] == "char":
+        t[0] = 1
+    else:
+        if isinstance(t[1].value, int):
+            t[0] = 4
+        elif isinstance(t[1].value, str):
+            t[0] = len(t[1].value[1:-1])
+        elif isinstance(t[1].value, float):
+            t[0] = 4
+
 def p_postExpression0(t):
     '''postfixExpression :  primaryExpression'''
     t[0] = t[1]
@@ -536,10 +560,6 @@ def p_fExpression2(t):
     '''primaryExpression :   ID'''
     t[0] = Primary(t[1], PrimaryType.IDENTIFIER, t.lexer.lexdata[0: t.lexer.lexpos].count("\n") + 1)
 
-def p_fExpression3(t):
-    '''primaryExpression :   STRVAL'''
-    t[0] = Primary(t[1], PrimaryType.CONSTANT, t.lexer.lexdata[0: t.lexer.lexpos].count("\n") + 1)
-
 def p_fExpression4(t):
     '''primaryExpression :  SCANF PARL PARR'''
     #rise value
@@ -557,7 +577,8 @@ def p_assignmentExpressionList1(t):
 def p_primExp0(t):
     '''constant         :   INTVAL
                         |   FLOATVAL
-                        |   CHARVAL'''
+                        |   CHARVAL
+                        |   STRVAL'''
     t[0] = Primary(t[1], PrimaryType.CONSTANT, t.lexer.lexdata[0: t.lexer.lexpos].count("\n") + 1)
 
 def p_primExp1(t):

@@ -12,15 +12,18 @@ class Printf(Instruction):
         buff = ""
         idx = 1
         i = 0
-        while i < len(baseString) - 1:
-            if baseString[i] == r"%":
-                baseName = self.exp[idx].firstRun(localE)
-                baseName = baseName[1].temp if baseName[0] == "symbol" else baseName[1]
-                buff += str(baseName)
-                idx += 1
+        if len(self.exp) > 1:
+            while i < len(baseString) - 1:
+                if baseString[i] == r"%":
+                    baseName = self.exp[idx].firstRun(localE)
+                    baseName = baseName[1].temp if baseName[0] == "symbol" else baseName[1]
+                    buff += str(baseName)
+                    idx += 1
+                    i += 1
+                else:
+                    buff += str(baseString[i])
                 i += 1
-            else:
-                buff += str(baseString[i])
-            i += 1
+        else:
+            buff =  baseString
         Quadruple.QDict.append(Quadruple(OperatorQuadruple.PRINT, f'"{buff}"', None, None))
         return ("rawvalue", 0)

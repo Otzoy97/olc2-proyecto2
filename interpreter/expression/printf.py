@@ -8,22 +8,22 @@ class Printf(Instruction):
         self.exp = exp
 
     def firstRun(self, localE):
-        baseString = self.exp[0]
-        buff = ""
+        baseString = self.exp[0][1:-1]
         idx = 1
         i = 0
         if len(self.exp) > 1:
-            while i < len(baseString) - 1:
-                if baseString[i] == r"%":
+            while i < len(baseString):
+                if idx < len(self.exp) and baseString[i] == r"%":
                     baseName = self.exp[idx].firstRun(localE)
-                    baseName = baseName[1].temp if baseName[0] == "symbol" else baseName[1]
-                    buff += str(baseName)
+                    if baseName[0] == "symbol":
+                        Quadruple.QDict.append(Quadruple(OperatorQuadruple.PRINT, baseName[1].temp, None, None))
+                    else:
+                        Quadruple.QDict.append(Quadruple(OperatorQuadruple.PRINT, baseName[1], None, None))
                     idx += 1
                     i += 1
                 else:
-                    buff += str(baseString[i])
+                    Quadruple.QDict.append(Quadruple(OperatorQuadruple.PRINT, f'"{str(baseString[i])}"', None, None))
                 i += 1
         else:
-            buff =  baseString
-        Quadruple.QDict.append(Quadruple(OperatorQuadruple.PRINT, f'"{buff}"', None, None))
+            Quadruple.QDict.append(Quadruple(OperatorQuadruple.PRINT, f'"{baseString}"', None, None))
         return ("rawvalue", 0)

@@ -18,6 +18,9 @@ class Printf(Instruction):
         i = 0
         try:
             if len(self.exp) > 1:
+                baseString = baseString.replace("\\n","\n")
+                baseString = baseString.replace("\\t","\t")
+                baseString = baseString.replace("\\r","\r")
                 #FIXME: no imprime bien cuando hay un caracter de escpe
                 while i < len(baseString):
                     if idx < len(self.exp) and baseString[i] == r"%":
@@ -28,14 +31,12 @@ class Printf(Instruction):
                             Quadruple.QDict.append(Quadruple(OperatorQuadruple.PRINT, baseName[1], None, None))
                         idx += 1
                         i += 1
-                    if idx < len(self.exp) and baseString[i] == r"\\":
-                        #trat ade recuperar el caractr siguiente:
-                        try:
-                            self.nextchar = "\\" +baseString[i+1]
-                        except:
-                            self.nextchar = "\\"
-                        Quadruple.QDict.append(Quadruple(OperatorQuadruple.PRINT, f'"{self.nextchar}"', None, None))
-                        i += 1
+                    elif ord(baseString[i]) == 10:
+                        Quadruple.QDict.append(Quadruple(OperatorQuadruple.PRINT, f'"\\n"', None, None))
+                    elif ord(baseString[i]) == 9:
+                        Quadruple.QDict.append(Quadruple(OperatorQuadruple.PRINT, f'"   "', None, None))
+                    elif ord(baseString[i]) == 13:
+                        Quadruple.QDict.append(Quadruple(OperatorQuadruple.PRINT, f'"\\r"', None, None))
                     else:
                         Quadruple.QDict.append(Quadruple(OperatorQuadruple.PRINT, f'"{str(baseString[i])}"', None, None))
                     i += 1

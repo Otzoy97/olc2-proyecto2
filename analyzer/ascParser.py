@@ -210,7 +210,10 @@ def p_init1(t):
 
 def p_init_list0(t):
     '''init_list        :   init'''
-    t[0] = [t[1]]
+    if isinstance(t[1], list):
+        t[0] = t[1]
+    else:
+        t[0] = [t[1]]
 
 def p_init_list1(t):
     '''init_list        :   init_list COMMA init'''
@@ -312,7 +315,7 @@ def p_lop_statement(t):
     elif t[1] == "do":
         t[0] = Do(t[5],t[2])
     elif t[1] == "for":
-        t[0] = For(t[3], t[5], t[7], t[8])
+        t[0] = For(t[3], t[5], t[7], t[9])
 
 def p_for_dec_exp0(t):
     '''for_dec_exp      :   assignmentExpression'''

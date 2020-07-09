@@ -12,9 +12,12 @@ class Binary(Instruction):
     def firstRun(self, localE):
         arg1 = self.exp1.firstRun(localE)
         arg2 = self.exp2.firstRun(localE)
-        tempName1 = arg1[1].temp if arg1[0] == "symbol" else arg1[1]
-        tempName2 = arg2[1].temp if arg2[0] == "symbol" else arg2[1]
-        q0 = Quadruple(self.setOperator(), tempName1, tempName2, f"$t{SymbolTable.IdxTempVar}")
+        self.tempName1 = arg1[1].temp if arg1[0] == "symbol" else arg1[1]
+        self.tempName2 = arg2[1].temp if arg2[0] == "symbol" else arg2[1]
+        op = self.setOperator()
+        if op == None:
+            return("tempname", q0.r)
+        q0 = Quadruple(op, self.tempName1, self.tempName2, f"$t{SymbolTable.IdxTempVar}")
         SymbolTable.IdxTempVar += 1
         Quadruple.QDict.append(q0)
         return("tempname", q0.r)
